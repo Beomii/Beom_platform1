@@ -28,6 +28,7 @@ var attack_timer = attack_delay
 
 const max_hp = 100
 var hp = max_hp
+export var gold =0
 
 func _ready():
 	$detector/CollisionShape2D.shape.radius = detect_range
@@ -85,6 +86,10 @@ func _physics_process(delta):
 	
 	attack_timer += delta
 	
+	if position.y >= global.MAP_BOTTOM_Y:
+		emit_signal("enemy_die")
+		queue_free()
+	
 func _on_detector_body_entered(body):
 	if body != self:
 		target = weakref(body)
@@ -109,6 +114,9 @@ func attack(pos):
 
 func _on_Area2D_body_entered(body):
 	queue_free()
+	emit_signal("enemy_die")
+	if body.collision_layer == 1:
+		body.gold = body.gold + gold
 
 
 func updateHp():
@@ -124,5 +132,7 @@ func damaging(unit, damage):
 	if hp < 0:
 		queue_free()
 		emit_signal("enemy_die")
+		if unit.collision_layer == 1:
+			unit.gold = unit.gold + gold
 	else:
 		updateHp()

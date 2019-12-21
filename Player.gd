@@ -1,6 +1,8 @@
 extends KinematicBody2D
 
 signal player_die()
+signal hp_updated(unit)
+signal gold_updated(unit)
 
 const GRAVITY = 1500
 const WALK_FORCE = 600
@@ -15,8 +17,10 @@ var velocity = Vector2()
 var jumping = false
 var prev_jump_pressed = false
 
+#unit properties
 export var max_hp = 100
 export var hp = 100
+export var gold = 0	setget set_gold
 
 var DamageMessage = preload("res://ui/DamageMessage.tscn")
 var Magic  = preload("res://projectile/Magic.tscn")
@@ -27,11 +31,17 @@ var heading = Vector2(1,0)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	emit_signal("hp_updated", self)
+	emit_signal("gold_updated", self)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+
+func set_gold(_gold):
+	gold = _gold
+	print("gold:"+str(gold))
+	emit_signal("gold_updated", self)
 
 func _physics_process(delta):
 	var force = Vector2(0, GRAVITY)
@@ -87,6 +97,10 @@ func _physics_process(delta):
 	velocity = move_and_slide(velocity, Vector2(0, -1))
 	
 	attack_timer += delta
+	
+	if position.y >= global.MAP_BOTTOM_Y:
+		emit_signal("player_die")
+		queue_free()
 
 func _input(event):
 	if event is InputEventKey:
@@ -106,13 +120,15 @@ func attack():
 func save_data():
 	var player_data = {
 		"hp":hp,
-		"max_hp":max_hp
+		"max_hp":max_hp,
+		"gold":gold
 		}
 	return player_data
 	
 func load_data(data):
 	hp = data.hp
 	max_hp = data.max_hp
+	gold = data.gold
 	updateHp()
 	
 func updateHp():
@@ -125,9 +141,10 @@ func damaging(unit, damage):
 	var dmgMsg = DamageMessage.instance()
 	dmgMsg.setDamage(damage)
 	add_child(dmgMsg)
-	if hp < 0:
+	if hp <= 0:
 		queue_free()
 		emit_signal("player_die")
 	else:
 		updateHp()
+		emit_signal("hp_updated", self)
 		

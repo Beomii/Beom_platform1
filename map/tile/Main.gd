@@ -20,3 +20,11 @@ func _on_Player_player_die():
 func _on_MapPortal_execute_portal(portal):
 	global.player_data = $Player.save_data()
 	get_tree().change_scene("res://map/Map2.tscn")
+
+
+func _on_Player_hp_updated(unit):
+	$HUD.updatePlayerHP(unit.hp, unit.max_hp)
+
+
+func _on_Player_gold_updated(unit):
+	$HUD.updateGold(unit.gold)

@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://map/Map2.gd" type="Script" id=1]
 [ext_resource path="res://map/tile/tile1.tres" type="TileSet" id=2]
 [ext_resource path="res://Enemy.tscn" type="PackedScene" id=3]
+[ext_resource path="res://ui/HUD.tscn" type="PackedScene" id=4]
 
 [node name="Map2" type="Node2D"]
 script = ExtResource( 1 )
@@ -17,3 +18,7 @@ position = Vector2( 60, 530 )
 
 [node name="Enemy" parent="." instance=ExtResource( 3 )]
 position = Vector2( 720, 540 )
+gold = 50
+
+[node name="HUD" parent="." instance=ExtResource( 4 )]
+[connection signal="enemy_die" from="Enemy" to="." method="_on_Enemy_enemy_die"]
