@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://ui/DamageMessage.gd" type="Script" id=1]
+
+[node name="DamageMessage" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -984.0
+margin_bottom = -586.0
+script = ExtResource( 1 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = -20.0
+margin_top = -7.0
+margin_right = 20.0
+margin_bottom = 7.0
+custom_colors/font_color = Color( 0.901961, 0.0784314, 0.0784314, 1 )
+text = "100"
+align = 1
+valign = 1
+
+[node name="Tween" type="Tween" parent="."]
+[connection signal="tween_all_completed" from="Tween" to="." method="_on_Tween_tween_all_completed"]
