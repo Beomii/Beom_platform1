@@ -11,7 +11,7 @@ const WALK_MAX_SPEED = 200
 const STOP_FORCE = 1000
 const JUMP_MAX_AIRBORNE_TIME = 0.2
 
-const JUMP_SPEED = 800
+const JUMP_SPEED = 600
 var on_air_time = 100
 var velocity = Vector2()
 var jumping = false
@@ -28,6 +28,10 @@ var Magic  = preload("res://projectile/Magic.tscn")
 var attack_delay = 1
 var attack_timer = 0
 var heading = Vector2(1,0)
+
+var attack_melee = false
+var attack_melee_duration = 1
+var attack_melee_timer = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -58,6 +62,8 @@ func _physics_process(delta):
 			stop =false
 			$body.animation = "run"
 			heading.x = -1
+			$AnimationPlayer.play("player_run")
+			$Sprite.scale.x = -1*abs($Sprite.scale.x)
 	elif walk_right:
 		if velocity.x >= -WALK_MIN_SPEED and velocity.x < WALK_MAX_SPEED:
 			force.x += WALK_FORCE
@@ -65,8 +71,8 @@ func _physics_process(delta):
 			stop = false
 			$body.animation = "run"
 			heading.x = 1
-	else:
-		$body.animation = "idle"
+			$AnimationPlayer.play("player_run")
+			$Sprite.scale.x = abs($Sprite.scale.x)
 			
 	if stop:
 		var vsign = sign(velocity.x)
@@ -76,6 +82,11 @@ func _physics_process(delta):
 		if vlen<0:
 			vlen =0
 		velocity.x = vlen*vsign
+		
+	if velocity.x == 0 and is_on_floor():
+		$body.animation = "idle"
+		if !jumping and !attack_melee:
+			$AnimationPlayer.play("player_idle")
 	
 	if is_on_floor():
 		on_air_time = 0
@@ -89,6 +100,7 @@ func _physics_process(delta):
 	
 	if jumping:
 		$body.animation = "jump"
+		$AnimationPlayer.play("player_jump")
 		
 	on_air_time += delta	
 	prev_jump_pressed = jump
@@ -97,6 +109,14 @@ func _physics_process(delta):
 	velocity = move_and_slide(velocity, Vector2(0, -1))
 	
 	attack_timer += delta
+	if attack_melee:
+		attack_melee_timer+=delta
+		
+	if attack_melee_timer >= attack_melee_duration:
+		attack_melee = false
+		$AnimationPlayer.play("player_idle")
+		attack_melee_timer=0
+		
 	
 	if position.y >= global.MAP_BOTTOM_Y:
 		emit_signal("player_die")
@@ -104,12 +124,17 @@ func _physics_process(delta):
 
 func _input(event):
 	if event is InputEventKey:
-		if event.is_pressed() and event.scancode == KEY_P:
-			if attack_timer >= attack_delay:
-				attack()
-				attack_timer = 0
-			else:
-				print("attack cooltime!")
+		if event.is_pressed():
+			if event.scancode == KEY_P:
+				if attack_timer >= attack_delay:
+					attack()
+					attack_timer = 0
+				else:
+					print("attack cooltime!")
+			elif event.scancode == KEY_K:
+				if !attack_melee:
+					$AnimationPlayer.play("player_attack")
+					attack_melee = true
 				
 func attack():
 	var magic = Magic.instance()
@@ -148,3 +173,15 @@ func damaging(unit, damage):
 		updateHp()
 		emit_signal("hp_updated", self)
 		
+
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	pass
+	#if anim_name == "player_attack":
+	#	attack_melee = false
+	#	$AnimationPlayer.play("player_idle")
+
+
+func _on_hitbox_body_entered(body):
+	if body.has_method("damaging"):
+		body.damaging(self, 10)

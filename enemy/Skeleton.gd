@@ -6,6 +6,7 @@ const STATE_ATTACK = 2
 
 var state = STATE_IDLE
 
+const GRAVITY =1200
 var velocity =Vector2()
 
 func _ready():
@@ -32,7 +33,8 @@ func change_state():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
-func _physics_process(delta):
+func _physics_process(delta):	
+	"""
 	if Input.is_action_pressed("move_left"):
 		velocity.x = -50
 		state = STATE_WALK
@@ -48,7 +50,9 @@ func _physics_process(delta):
 		if state == STATE_WALK:
 			state = STATE_IDLE
 			change_state()
+	"""
 	
+	velocity.y += GRAVITY* delta
 	velocity = move_and_slide(velocity, Vector2(0, -1))
 
 func _on_hitbox_body_entered(body):
