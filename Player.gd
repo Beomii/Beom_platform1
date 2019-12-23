@@ -11,7 +11,7 @@ const WALK_MAX_SPEED = 200
 const STOP_FORCE = 1000
 const JUMP_MAX_AIRBORNE_TIME = 0.2
 
-const JUMP_SPEED = 600
+const JUMP_SPEED = 700
 var on_air_time = 100
 var velocity = Vector2()
 var jumping = false

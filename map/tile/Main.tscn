@@ -6,7 +6,7 @@
 [ext_resource path="res://map/MapPortal.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Enemy.tscn" type="PackedScene" id=5]
 [ext_resource path="res://ui/HUD.tscn" type="PackedScene" id=6]
-[ext_resource path="res://tests/Dummy.tscn" type="PackedScene" id=7]
+[ext_resource path="res://enemy/Skeleton.tscn" type="PackedScene" id=7]
 
 [node name="Main" type="Node2D"]
 script = ExtResource( 1 )
@@ -40,9 +40,8 @@ gold = 200
 
 [node name="HUD" parent="." instance=ExtResource( 6 )]
 
-[node name="Dummy" parent="." instance=ExtResource( 7 )]
-position = Vector2( 160, 526 )
-collision_layer = 8
+[node name="Skeleton" parent="." instance=ExtResource( 7 )]
+position = Vector2( 430, 540 )
 [connection signal="gold_updated" from="Player" to="." method="_on_Player_gold_updated"]
 [connection signal="hp_updated" from="Player" to="." method="_on_Player_hp_updated"]
 [connection signal="player_die" from="Player" to="." method="_on_Player_player_die"]
