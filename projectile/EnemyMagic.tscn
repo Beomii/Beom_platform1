@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://projectile/EnemyMagic.gd" type="Script" id=1]
 [ext_resource path="res://sprites/textures/smoke4.png" type="Texture" id=2]
+[ext_resource path="res://sprites/effects/_100x100px.png" type="Texture" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 7.63334, 7.30171 )
+extents = Vector2( 13.4164, 13.3418 )
 
 [sub_resource type="Gradient" id=2]
 offsets = PoolRealArray( 0, 0.333333, 0.8, 1 )
@@ -31,6 +32,22 @@ angle_random = 1.0
 scale_curve = SubResource( 5 )
 color_ramp = SubResource( 3 )
 
+[sub_resource type="Animation" id=7]
+resource_name = "ball"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0, 29 ]
+}
+
 [node name="EnemyMagic" type="Area2D"]
 collision_layer = 16
 collision_mask = 3
@@ -40,9 +57,19 @@ script = ExtResource( 1 )
 shape = SubResource( 1 )
 
 [node name="Particles2D" type="Particles2D" parent="."]
+visible = false
 amount = 50
 visibility_rect = Rect2( -53.1077, -3.9464, 56.8294, 7.88568 )
 process_material = SubResource( 6 )
 texture = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 3 )
+offset = Vector2( 0, 8 )
+vframes = 6
+hframes = 6
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/ball = SubResource( 7 )
 [connection signal="area_entered" from="." to="." method="_on_EnemyMagic_area_entered"]
 [connection signal="body_entered" from="." to="." method="_on_EnemyMagic_body_entered"]

@@ -30,7 +30,7 @@ var attack_timer = 0
 var heading = Vector2(1,0)
 
 var attack_melee = false
-var attack_melee_duration = 1
+var attack_melee_duration = 0.5
 var attack_melee_timer = 0
 
 # Called when the node enters the scene tree for the first time.

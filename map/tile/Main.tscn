@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://map/tile/Main.gd" type="Script" id=1]
 [ext_resource path="res://map/tile/tile1.tres" type="TileSet" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://Enemy.tscn" type="PackedScene" id=5]
 [ext_resource path="res://ui/HUD.tscn" type="PackedScene" id=6]
 [ext_resource path="res://enemy/Skeleton.tscn" type="PackedScene" id=7]
+[ext_resource path="res://map/fire.tscn" type="PackedScene" id=8]
 
 [node name="Main" type="Node2D"]
 script = ExtResource( 1 )
@@ -29,8 +30,10 @@ current = true
 position = Vector2( 1650, 540 )
 
 [node name="Enemy" parent="." instance=ExtResource( 5 )]
-position = Vector2( 860, 526 )
+position = Vector2( 610, 526 )
 collision_mask = 3
+detect_range = 500
+attack_range = 300
 gold = 100
 
 [node name="Enemy2" parent="." instance=ExtResource( 5 )]
@@ -41,8 +44,14 @@ gold = 200
 [node name="HUD" parent="." instance=ExtResource( 6 )]
 
 [node name="Skeleton" parent="." instance=ExtResource( 7 )]
-position = Vector2( 430, 540 )
+position = Vector2( 1100, 515.939 )
+
+[node name="map_objects" type="Node" parent="."]
+
+[node name="fire" parent="map_objects" instance=ExtResource( 8 )]
+position = Vector2( 1420, 476 )
 [connection signal="gold_updated" from="Player" to="." method="_on_Player_gold_updated"]
 [connection signal="hp_updated" from="Player" to="." method="_on_Player_hp_updated"]
 [connection signal="player_die" from="Player" to="." method="_on_Player_player_die"]
 [connection signal="execute_portal" from="MapPortal" to="." method="_on_MapPortal_execute_portal"]
+[connection signal="body_entered" from="map_objects/fire" to="." method="_on_fire_body_entered"]

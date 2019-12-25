@@ -1,25 +1,8 @@
-extends Area2D
-
-var shooter = null
-var damage = 20
-var speed= 200
-var velocity = Vector2()
-var direction = Vector2()
+extends "res://projectile/Projectile.gd"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	if direction:
-		velocity = direction*speed
-		position += velocity*delta
-
-func shoot(_shooter, target_pos):
-	self.shooter = _shooter
-	rotation = target_pos.angle_to_point(position)
-	direction = (target_pos - position).normalized()
+	$AnimationPlayer.play("ball")
 
 func _on_EnemyMagic_body_entered(body):
 	if body.has_method("damaging"):

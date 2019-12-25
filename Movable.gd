@@ -1,11 +1,7 @@
-extends Node
+extends KinematicBody2D
 
-const COLLISION_LAYER_PLAYER = 1
-const COLLISION_LAYER_MAPTILE = 2
-const COLLISION_LAYER_ENEMY = 8
-
-const MAP_BOTTOM_Y = 800
-var player_data=null
+const GRAVITY = 1000
+var velocity =Vector2()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -14,3 +10,7 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+func _physics_process(delta):
+	
+	velocity.y += GRAVITY*delta
+	velocity = move_and_slide(velocity, Vector2(0, -1))

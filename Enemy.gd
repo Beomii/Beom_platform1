@@ -16,8 +16,8 @@ var state = STATE_IDLE
 
 export var walk_force = 30
 var velocity = Vector2()
-var detect_range = 300
-var attack_range = 100
+export var detect_range = 300
+export var attack_range = 100
 
 var target = null
 
@@ -106,16 +106,18 @@ func _on_detector_body_exited(body):
 
 func attack(pos):
 	var magic = EnemyMagic.instance()
-	magic.collision_mask = 1 + 2
+	magic.collision_mask = global.COLLISION_LAYER_PLAYER + global.COLLISION_LAYER_MAPTILE
 	magic.position = position
 	get_parent().add_child(magic)
+	magic.fire_range=attack_range
+	magic.is_range=true
 	magic.shoot(self, pos)
 	pass
 
 func _on_Area2D_body_entered(body):
 	queue_free()
 	emit_signal("enemy_die")
-	if body.collision_layer == 1:
+	if body.collision_layer == global.COLLISION_LAYER_PLAYER:
 		body.gold = body.gold + gold
 
 
@@ -132,7 +134,7 @@ func damaging(unit, damage):
 	if hp < 0:
 		queue_free()
 		emit_signal("enemy_die")
-		if unit.collision_layer == 1:
+		if unit.collision_layer == global.COLLISION_LAYER_PLAYER:
 			unit.gold = unit.gold + gold
 	else:
 		updateHp()

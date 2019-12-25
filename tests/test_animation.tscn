@@ -1,12 +1,16 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://enemy/Skeleton.tscn" type="PackedScene" id=1]
-[ext_resource path="res://tests/Dummy.tscn" type="PackedScene" id=2]
+[ext_resource path="res://tests/Dummy.tscn" type="PackedScene" id=1]
+[ext_resource path="res://map/fire.tscn" type="PackedScene" id=2]
+[ext_resource path="res://effects/ball.tscn" type="PackedScene" id=3]
 
 [node name="test_animation" type="Node2D"]
 
-[node name="Skeleton" parent="." instance=ExtResource( 1 )]
-position = Vector2( 500, 270 )
-
-[node name="Dummy" parent="." instance=ExtResource( 2 )]
+[node name="Dummy" parent="." instance=ExtResource( 1 )]
 position = Vector2( 540, 259.206 )
+
+[node name="fire" parent="." instance=ExtResource( 2 )]
+position = Vector2( 686.194, 245.605 )
+
+[node name="ball" parent="." instance=ExtResource( 3 )]
+position = Vector2( 430.764, 269.779 )
