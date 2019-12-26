@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://ui/HUD.gd" type="Script" id=1]
 
@@ -7,6 +7,12 @@ bg_color = Color( 0.321569, 0.741176, 0.137255, 1 )
 
 [sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.968627, 0.0627451, 0.0627451, 1 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0.341176, 0.572549, 0.988235, 1 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 1, 1, 1, 1 )
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource( 1 )
@@ -52,3 +58,13 @@ margin_top = 10.0
 margin_right = 270.0
 margin_bottom = 24.0
 valign = 1
+
+[node name="breath_bar" type="ProgressBar" parent="."]
+margin_left = 40.0
+margin_top = 40.0
+margin_right = 140.0
+margin_bottom = 54.0
+custom_styles/fg = SubResource( 3 )
+custom_styles/bg = SubResource( 4 )
+value = 100.0
+percent_visible = false

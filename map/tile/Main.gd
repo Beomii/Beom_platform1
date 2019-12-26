@@ -31,6 +31,10 @@ func _on_Player_gold_updated(unit):
 
 
 func _on_fire_body_entered(body):
-	if body.collision_layer == 1:
+	if body.collision_layer == global.COLLISION_LAYER_PLAYER:
 		if body.has_method("damaging"):
 			body.damaging(null, 10)
+
+
+func _on_Player_breath_updated(unit):
+	$HUD.updatePlayerBreath(unit.breath, unit.MAX_BREATH)

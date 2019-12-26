@@ -3,6 +3,7 @@ extends KinematicBody2D
 signal player_die()
 signal hp_updated(unit)
 signal gold_updated(unit)
+signal breath_updated(unit)
 
 const GRAVITY = 1500
 const WALK_FORCE = 600
@@ -10,6 +11,7 @@ const WALK_MIN_SPEED = 10
 const WALK_MAX_SPEED = 200
 const STOP_FORCE = 1000
 const JUMP_MAX_AIRBORNE_TIME = 0.2
+const WATER_SPEED_FACTOR = 0.2
 
 const JUMP_SPEED = 700
 var on_air_time = 100
@@ -33,6 +35,15 @@ var attack_melee = false
 var attack_melee_duration = 0.5
 var attack_melee_timer = 0
 
+var is_in_water = false
+const MAX_BREATH = 100
+const BREATH_REDUCE_AMOUNT = 10
+const BREATH_RESTORE_AMOUNT = 10
+const LOW_BREATH_REDUCE_HP = 5
+var breath = MAX_BREATH
+var breath_timer_delay = 1
+var breath_timer = 0
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	emit_signal("hp_updated", self)
@@ -54,10 +65,17 @@ func _physics_process(delta):
 	var walk_right = Input.is_action_pressed("move_right")
 	var jump = Input.is_action_pressed("jump")
 	
+	var walk_max_speed = WALK_MAX_SPEED
+	if is_in_water:
+		walk_max_speed = WALK_MAX_SPEED*WATER_SPEED_FACTOR
+	
 	var stop = true
 	if walk_left:
-		if velocity.x <= WALK_MIN_SPEED and velocity.x > -WALK_MAX_SPEED:
-			force.x -= WALK_FORCE
+		if velocity.x <= WALK_MIN_SPEED and velocity.x > -walk_max_speed:
+			if is_in_water:
+				force.x -= WALK_FORCE * WATER_SPEED_FACTOR
+			else:
+				force.x -= WALK_FORCE
 			$body.flip_h = true
 			stop =false
 			$body.animation = "run"
@@ -65,8 +83,11 @@ func _physics_process(delta):
 			$AnimationPlayer.play("player_run")
 			$Sprite.scale.x = -1*abs($Sprite.scale.x)
 	elif walk_right:
-		if velocity.x >= -WALK_MIN_SPEED and velocity.x < WALK_MAX_SPEED:
-			force.x += WALK_FORCE
+		if velocity.x >= -WALK_MIN_SPEED and velocity.x < walk_max_speed:
+			if is_in_water:
+				force.x += WALK_FORCE * WATER_SPEED_FACTOR
+			else:
+				force.x += WALK_FORCE
 			$body.flip_h = false
 			stop = false
 			$body.animation = "run"
@@ -116,7 +137,22 @@ func _physics_process(delta):
 		attack_melee = false
 		$AnimationPlayer.play("player_idle")
 		attack_melee_timer=0
+	
+	breath_timer += delta
 		
+	if breath_timer >= breath_timer_delay:
+		if is_in_water:	
+			breath -= BREATH_REDUCE_AMOUNT
+			emit_signal("breath_updated", self)
+			if breath<=0:
+				damaging(null, LOW_BREATH_REDUCE_HP)
+				breath = 0
+		else:
+			breath += BREATH_RESTORE_AMOUNT
+			if breath>MAX_BREATH:
+				breath = MAX_BREATH
+			emit_signal("breath_updated", self)
+		breath_timer =0	
 	
 	if position.y >= global.MAP_BOTTOM_Y:
 		emit_signal("player_die")

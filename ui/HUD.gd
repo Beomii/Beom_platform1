@@ -22,3 +22,7 @@ func updatePlayerHP(hp, max_hp):
 	
 func updateGold(gold):
 	$player_gold_label.text= str(gold)
+	
+func updatePlayerBreath(breath, max_breath):
+	$breath_bar.max_value = max_breath
+	$breath_bar.value = breath

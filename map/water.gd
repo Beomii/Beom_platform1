@@ -1,0 +1,23 @@
+extends Area2D
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = "text"
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+func _on_water_body_entered(body):
+	if body.collision_layer == global.COLLISION_LAYER_PLAYER:
+		body.is_in_water = true
+
+
+func _on_water_body_exited(body):
+	if body.collision_layer == global.COLLISION_LAYER_PLAYER:
+		body.is_in_water = false
