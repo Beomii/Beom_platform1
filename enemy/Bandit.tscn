@@ -1,0 +1,134 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://enemy/Bandit.gd" type="Script" id=1]
+[ext_resource path="res://sprites/enemy/HeavyBandit_Spritesheet.png" type="Texture" id=2]
+
+[sub_resource type="CapsuleShape2D" id=4]
+radius = 25.1756
+height = 49.9746
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 3.55231, 8.25879 )
+
+[sub_resource type="Animation" id=3]
+resource_name = "bandit_attack"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 16, 23 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite/hitbox/CollisionShape2D:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.6, 0.8 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true ]
+}
+
+[sub_resource type="Animation" id=1]
+resource_name = "bandit_idle"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0, 3 ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "bandit_run"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 8, 15 ]
+}
+
+[sub_resource type="CircleShape2D" id=6]
+
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 0.368627, 0.933333, 0.176471, 1 )
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 0.980392, 0.0823529, 0.0823529, 1 )
+
+[node name="Bandit" type="KinematicBody2D"]
+collision_layer = 8
+script = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 2, 2 )
+texture = ExtResource( 2 )
+vframes = 5
+hframes = 8
+frame = 16
+
+[node name="RayCast2D" type="RayCast2D" parent="Sprite"]
+scale = Vector2( 0.5, 0.5 )
+enabled = true
+cast_to = Vector2( -50, 0 )
+collision_mask = 2
+collide_with_areas = true
+
+[node name="hitbox" type="Area2D" parent="Sprite"]
+collision_layer = 32
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/hitbox"]
+position = Vector2( -17.1328, -5.06992 )
+shape = SubResource( 5 )
+disabled = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/bandit_attack = SubResource( 3 )
+anims/bandit_idle = SubResource( 1 )
+anims/bandit_run = SubResource( 2 )
+
+[node name="detector" type="Area2D" parent="."]
+visible = false
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="detector"]
+shape = SubResource( 6 )
+
+[node name="hp_bar" type="ProgressBar" parent="."]
+margin_left = -20.0
+margin_top = -50.0
+margin_right = 20.0
+margin_bottom = -44.0
+custom_styles/fg = SubResource( 7 )
+custom_styles/bg = SubResource( 8 )
+percent_visible = false
+
+[node name="Tween" type="Tween" parent="hp_bar"]
+[connection signal="body_entered" from="Sprite/hitbox" to="." method="_on_hitbox_body_entered"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="body_entered" from="detector" to="." method="_on_detector_body_entered"]
+[connection signal="body_exited" from="detector" to="." method="_on_detector_body_exited"]

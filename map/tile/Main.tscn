@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://map/tile/Main.gd" type="Script" id=1]
 [ext_resource path="res://Player.tscn" type="PackedScene" id=2]
@@ -7,8 +7,9 @@
 [ext_resource path="res://Enemy.tscn" type="PackedScene" id=5]
 [ext_resource path="res://ui/HUD.tscn" type="PackedScene" id=6]
 [ext_resource path="res://enemy/Skeleton.tscn" type="PackedScene" id=7]
-[ext_resource path="res://map/fire.tscn" type="PackedScene" id=8]
-[ext_resource path="res://map/water.tscn" type="PackedScene" id=9]
+[ext_resource path="res://enemy/Bandit.tscn" type="PackedScene" id=8]
+[ext_resource path="res://map/fire.tscn" type="PackedScene" id=9]
+[ext_resource path="res://map/water.tscn" type="PackedScene" id=10]
 
 [node name="Main" type="Node2D"]
 script = ExtResource( 1 )
@@ -32,7 +33,7 @@ tile_data = PoolIntArray( -1, 4, 0, -65536, 4, 0, -65535, 4, 0, -65534, 4, 0, -6
 position = Vector2( 1650, 540 )
 
 [node name="Enemy" parent="." instance=ExtResource( 5 )]
-position = Vector2( 735, 530 )
+position = Vector2( 1400, 525 )
 collision_mask = 3
 detect_range = 500
 attack_range = 300
@@ -46,14 +47,20 @@ gold = 200
 [node name="HUD" parent="." instance=ExtResource( 6 )]
 
 [node name="Skeleton" parent="." instance=ExtResource( 7 )]
-position = Vector2( 1100, 515.939 )
+position = Vector2( 1163, 516 )
+
+[node name="Bandit" parent="." instance=ExtResource( 8 )]
+position = Vector2( 105, 512.135 )
+speed = 100
+walk_force = 500
+attack_range = 60
 
 [node name="map_objects" type="Node" parent="."]
 
-[node name="fire" parent="map_objects" instance=ExtResource( 8 )]
-position = Vector2( 560, 481 )
+[node name="fire" parent="map_objects" instance=ExtResource( 9 )]
+position = Vector2( 1540, 485 )
 
-[node name="water" parent="map_objects" instance=ExtResource( 9 )]
+[node name="water" parent="map_objects" instance=ExtResource( 10 )]
 position = Vector2( 315, 595 )
 scale = Vector2( 5, 1 )
 [connection signal="breath_updated" from="Player" to="." method="_on_Player_breath_updated"]

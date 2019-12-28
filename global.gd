@@ -1,5 +1,7 @@
 extends Node
 
+const GRAVITY = 1000
+
 const COLLISION_LAYER_PLAYER = 1
 const COLLISION_LAYER_MAPTILE = 2
 const COLLISION_LAYER_ENEMY = 8
