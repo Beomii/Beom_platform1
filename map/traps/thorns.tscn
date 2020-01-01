@@ -1,0 +1,34 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://map/traps/thorns.gd" type="Script" id=1]
+[ext_resource path="res://sprites/tiles/thorn.png" type="Texture" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 22.3288, 7.91622 )
+
+[node name="thorns" type="Area2D"]
+collision_layer = 64
+script = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+
+[node name="Sprite2" type="Sprite" parent="."]
+position = Vector2( -15, 0 )
+texture = ExtResource( 2 )
+
+[node name="Sprite3" type="Sprite" parent="."]
+position = Vector2( 15, 0 )
+texture = ExtResource( 2 )
+
+[node name="Label" type="Label" parent="."]
+visible = false
+margin_left = -20.0
+margin_top = -30.0
+margin_right = 20.0
+margin_bottom = -16.0
+[connection signal="body_entered" from="." to="." method="_on_thorns_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_thorns_body_exited"]

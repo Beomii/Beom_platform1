@@ -5,7 +5,7 @@ const STATE_MOVE_TO_TARGET = 1
 const STATE_ATTACK = 2
 
 export var damage = 10
-export var detect_range = 300
+export var detect_range = 150
 export var attack_range = 80
 
 var target = null
@@ -16,6 +16,7 @@ var attack_timer = ATTACK_COOLTIME
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	speed = 100
 	$detector/CollisionShape2D.shape.radius = detect_range
 	$hp_bar.value=hp
 	$hp_bar.max_value=max_hp
@@ -33,7 +34,9 @@ func _process_force(force, delta):
 				if dist < attack_range:
 					state = STATE_ATTACK
 				elif dist < detect_range:
-					state = STATE_MOVE_TO_TARGET
+					var dist_x = abs(t.position.x - position.x)
+					if dist_x > attack_range:
+						state = STATE_MOVE_TO_TARGET
 			else:
 				state=STATE_IDLE
 	else:

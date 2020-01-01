@@ -18,9 +18,8 @@
 [ext_resource path="res://HPBar.tscn" type="PackedScene" id=16]
 [ext_resource path="res://sprites/Player/player_atlas.png" type="Texture" id=17]
 
-[sub_resource type="CapsuleShape2D" id=1]
-radius = 16.7
-height = 25.306
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 12.2201, 26.8909 )
 
 [sub_resource type="SpriteFrames" id=2]
 animations = [ {
@@ -130,7 +129,7 @@ position = Vector2( 0, -7.913 )
 scale = Vector2( 1.5, 1.5 )
 frames = SubResource( 2 )
 animation = "idle"
-frame = 1
+frame = 2
 playing = true
 
 [node name="HPBar" parent="." instance=ExtResource( 16 )]

@@ -7,7 +7,11 @@ const COLLISION_LAYER_MAPTILE = 2
 const COLLISION_LAYER_ENEMY = 8
 
 const MAP_BOTTOM_Y = 800
-var player_data=null
+var player_data= {
+		"hp":100,
+		"max_hp":100,
+		"gold":0
+		}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
