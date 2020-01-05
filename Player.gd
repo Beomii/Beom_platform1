@@ -8,7 +8,7 @@ signal breath_updated(unit)
 const GRAVITY = 1500
 const WALK_FORCE = 600
 const WALK_MIN_SPEED = 10
-const WALK_MAX_SPEED = 200
+export var WALK_MAX_SPEED = 200
 const STOP_FORCE = 1000
 const JUMP_MAX_AIRBORNE_TIME = 0.2
 const WATER_SPEED_FACTOR = 0.2
@@ -23,6 +23,7 @@ var prev_jump_pressed = false
 export var max_hp = 100
 export var hp = 100
 export var gold = 0	setget set_gold
+export var damage = 30
 
 var DamageMessage = preload("res://ui/DamageMessage.tscn")
 var Magic  = preload("res://projectile/Magic.tscn")
@@ -220,4 +221,4 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 
 func _on_hitbox_body_entered(body):
 	if body.has_method("damaging"):
-		body.damaging(self, 10)
+		body.damaging(self, damage)

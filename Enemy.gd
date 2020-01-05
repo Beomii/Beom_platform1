@@ -110,7 +110,7 @@ func attack(pos):
 	magic.position = position
 	get_parent().add_child(magic)
 	magic.fire_range=attack_range
-	magic.is_range=true
+	magic.is_range=false
 	magic.shoot(self, pos)
 	pass
 

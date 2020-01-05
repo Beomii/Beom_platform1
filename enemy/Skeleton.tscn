@@ -118,6 +118,7 @@ shape = SubResource( 2 )
 disabled = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+playback_speed = 2.0
 anims/skeleton_attack = SubResource( 3 )
 anims/skeleton_idle = ExtResource( 5 )
 anims/skeleton_walk = SubResource( 4 )

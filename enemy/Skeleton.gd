@@ -16,9 +16,9 @@ var max_hp = 100
 export var gold = 0
 export var damage = 20
 
-export var detect_range = 300
+export var detect_range = 500
 export var attack_range = 50
-export var speed = 1500
+export var speed = 3000
 
 var target =null
 
