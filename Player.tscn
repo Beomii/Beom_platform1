@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://Player.gd" type="Script" id=1]
 [ext_resource path="res://sprites/Player/adventurer-idle-00.png" type="Texture" id=2]
@@ -17,6 +17,7 @@
 [ext_resource path="res://sprites/Player/adventurer-jump-03.png" type="Texture" id=15]
 [ext_resource path="res://HPBar.tscn" type="PackedScene" id=16]
 [ext_resource path="res://sprites/Player/player_atlas.png" type="Texture" id=17]
+[ext_resource path="res://RotateObject.tscn" type="PackedScene" id=18]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 12.2201, 26.8909 )
@@ -117,6 +118,7 @@ tracks/0/keys = {
 }
 
 [node name="Player" type="KinematicBody2D"]
+z_index = 10
 collision_mask = 2
 script = ExtResource( 1 )
 
@@ -129,6 +131,7 @@ position = Vector2( 0, -7.913 )
 scale = Vector2( 1.5, 1.5 )
 frames = SubResource( 2 )
 animation = "idle"
+frame = 3
 playing = true
 
 [node name="HPBar" parent="." instance=ExtResource( 16 )]
@@ -157,5 +160,8 @@ anims/player_attack = SubResource( 4 )
 anims/player_idle = SubResource( 5 )
 anims/player_jump = SubResource( 6 )
 anims/player_run = SubResource( 7 )
+
+[node name="RotateObject" parent="." instance=ExtResource( 18 )]
+v_radius = 10
 [connection signal="body_entered" from="Sprite/hitbox" to="." method="_on_hitbox_body_entered"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

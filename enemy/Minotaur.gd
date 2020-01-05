@@ -11,7 +11,7 @@ export var attack2_range = 50
 export var attack1_cooltime = 5
 export var attack2_cooltime = 3
 
-export var damage = 10
+export var damage = 3
 
 var attack1_timer = 0
 var attack2_timer = 0
@@ -29,6 +29,8 @@ func _ready():
 	speed = 100
 	
 	$detector/CollisionShape2D.shape.radius = detect_range
+	$hp_bar.value=hp
+	$hp_bar.max_value=max_hp
 
 func _draw():
 	Drawing.draw_circle_arc(self, Vector2(0,0), detect_range, 0, 360, Color(1.0, 0.0, 0.0, 0.3))
@@ -41,19 +43,36 @@ func _process_force(force, delta):
 		 t= target.get_ref()
 			if t:
 				var dist = position.distance_to(t.position)
-				if dist < attack1_range:
-					if attack1_timer >= attack1_cooltime:
-						state=STATE_ATTACK1
-						attack1_timer=0
-				if dist <attack2_range:
-					if state != STATE_ATTACK1:
-						if attack2_timer >= attack2_cooltime:
-							state= STATE_ATTACK2
-							attack2_timer = 0
-				if dist > attack1_range and dist >attack2_range and dist < detect_range:
-					state = STATE_MOVE_TO_TARGET
-				if dist > detect_range:
-					state = STATE_IDLE
+				if state != STATE_ATTACK1:
+					if state != STATE_ATTACK2:
+						if dist < attack1_range:
+							if attack1_timer >= attack1_cooltime:
+								state=STATE_ATTACK1
+								
+								if t.position.x > position.x:
+									$Sprite.scale.x = abs($Sprite.scale.x)
+								else:
+									$Sprite.scale.x = -1*abs($Sprite.scale.x)
+								$AnimationPlayer.play("attack_1")						
+								attack1_timer=0
+				if state != STATE_ATTACK2:
+					if dist <attack2_range:
+						if state != STATE_ATTACK1:
+							if attack2_timer >= attack2_cooltime:
+								
+								state= STATE_ATTACK2
+								if t.position.x > position.x:
+									$Sprite.scale.x = abs($Sprite.scale.x)
+								else:
+									$Sprite.scale.x = -1*abs($Sprite.scale.x)
+								$AnimationPlayer.play("attack_2")
+								
+								attack2_timer = 0
+				if state != STATE_ATTACK1 and state != STATE_ATTACK2:
+					if dist > attack1_range and dist >attack2_range and dist < detect_range:
+						state = STATE_MOVE_TO_TARGET
+					if dist > detect_range:
+						state = STATE_IDLE
 			else:
 				state = STATE_IDLE
 	else:
@@ -61,6 +80,7 @@ func _process_force(force, delta):
 	match(state):
 		STATE_IDLE:
 			$AnimationPlayer.play("idle")
+			updateLabel("idle")		
 		STATE_MOVE_TO_TARGET:
 			if t:
 				if t.position.x > position.x:
@@ -77,22 +97,16 @@ func _process_force(force, delta):
 						$AnimationPlayer.play("run")
 				if $Sprite/RayCast2D.is_colliding():
 					velocity.y -= 100
+			updateLabel("move to target")		
 		STATE_ATTACK1:
-			if t.position.x > position.x:
-				$Sprite.scale.x = abs($Sprite.scale.x)
-			else:
-				$Sprite.scale.x = -1*abs($Sprite.scale.x)
-			$AnimationPlayer.play("attack_1")
+			updateLabel("attack1")		
 		STATE_ATTACK2:
-			if t.position.x > position.x:
-				$Sprite.scale.x = abs($Sprite.scale.x)
-			else:
-				$Sprite.scale.x = -1*abs($Sprite.scale.x)
-			$AnimationPlayer.play("attack_2")
-	
+			updateLabel("attack2")		
 	attack1_timer += delta
 	attack2_timer += delta
 	return force
+func updateLabel(text):
+	$Label.text = text	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
@@ -106,11 +120,13 @@ func _on_hitbox_body_entered(body):
 			body.damaging(self, damage)
 
 
-func _on_attack2_hitbox_body_entered(body):
+func _on_attack2_hitbox_body_entered(body):	
 	if body.collision_layer == global.COLLISION_LAYER_PLAYER:
 		if body.has_method("damaging"):
-			body.damaging(self, damage)			
-			#body.position.x += -1*sign((position - body.position).x)* 30
+			body.damaging(self, damage)
+			
+			#knockback test
+			body.velocity.x += -1*sign((position - body.position).x)* 300
 
 
 func _on_detector_body_entered(body):
@@ -129,5 +145,11 @@ func _on_detector_body_exited(body):
 
 
 func _on_AnimationPlayer_animation_finished(anim_name):
-	if anim_name == "attack_1" or anim_name == "attack_2":
+	if anim_name == "attack_1":
+		$Sprite/hitbox.monitoring=false
 		state = STATE_IDLE
+		print("attack1 finished")
+	if anim_name == "attack_2":
+		$Sprite/attack2_hitbox.monitoring=false
+		state = STATE_IDLE
+		print("attack2 finished")

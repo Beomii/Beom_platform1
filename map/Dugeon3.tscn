@@ -202,7 +202,7 @@ limit_bottom = 600
 [node name="enemy" type="Node" parent="."]
 
 [node name="Skeleton" parent="enemy" instance=ExtResource( 3 )]
-position = Vector2( 731.581, 511.581 )
+position = Vector2( 1138.02, 514.374 )
 damage = 5
 detect_range = 300
 speed = 7000
