@@ -28,12 +28,12 @@ export var damage = 30
 var DamageMessage = preload("res://ui/DamageMessage.tscn")
 var Magic  = preload("res://projectile/Magic.tscn")
 
-var attack_delay = 1
+var attack_delay = 3
 var attack_timer = 0
 var heading = Vector2(1,0)
 
 var attack_melee = false
-var attack_melee_duration = 0.5
+var attack_melee_duration = 2
 var attack_melee_timer = 0
 
 var is_in_water = false

@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://ui/HUD.gd" type="Script" id=1]
+[ext_resource path="res://ui/player_skill_panel.tscn" type="PackedScene" id=2]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.321569, 0.741176, 0.137255, 1 )
@@ -68,3 +69,5 @@ custom_styles/fg = SubResource( 3 )
 custom_styles/bg = SubResource( 4 )
 value = 100.0
 percent_visible = false
+
+[node name="player_skill_panel" parent="." instance=ExtResource( 2 )]

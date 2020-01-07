@@ -131,7 +131,7 @@ position = Vector2( 0, -7.913 )
 scale = Vector2( 1.5, 1.5 )
 frames = SubResource( 2 )
 animation = "idle"
-frame = 3
+frame = 1
 playing = true
 
 [node name="HPBar" parent="." instance=ExtResource( 16 )]
