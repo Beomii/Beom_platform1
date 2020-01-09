@@ -23,3 +23,14 @@ func _on_Player_player_die():
 
 func _on_Player_hp_updated(unit):
 	$HUD.updatePlayerHP($Player.hp, $Player.max_hp)
+
+
+func _on_TrapSwitch_body_entered(body):
+	if body.collision_layer == global.COLLISION_LAYER_PLAYER:
+		$map_objects/ArrowTrap.execute_trap()
+		$map_objects/ArrowTrap3.execute_trap()
+
+
+func _on_TrapSwitch2_body_entered(body):
+	if body.collision_layer == global.COLLISION_LAYER_PLAYER:
+		$map_objects/ArrowTrap2.execute_trap()
