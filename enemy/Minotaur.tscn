@@ -197,6 +197,7 @@ margin_right = 50.0
 margin_bottom = -36.0
 align = 1
 valign = 1
+[connection signal="die" from="." to="." method="_on_Minotaur_die"]
 [connection signal="body_entered" from="Sprite/hitbox" to="." method="_on_hitbox_body_entered"]
 [connection signal="body_entered" from="Sprite/attack2_hitbox" to="." method="_on_attack2_hitbox_body_entered"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

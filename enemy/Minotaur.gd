@@ -5,11 +5,14 @@ const STATE_MOVE_TO_TARGET = 1
 const STATE_ATTACK1 = 2
 const STATE_ATTACK2 = 3
 
+var Coin = preload("res://items/Coin.tscn")
+
 export var detect_range = 150
 export var attack1_range = 50
 export var attack2_range = 50
 export var attack1_cooltime = 5
 export var attack2_cooltime = 3
+export var gold = 10
 
 export var damage = 3
 
@@ -153,3 +156,10 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 		$Sprite/attack2_hitbox.monitoring=false
 		state = STATE_IDLE
 		print("attack2 finished")
+
+
+func _on_Minotaur_die(unit):
+	var coin = Coin.instance()
+	coin.position = position
+	coin.gold = gold
+	get_parent().add_child(coin)

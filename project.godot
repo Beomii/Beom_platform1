@@ -63,6 +63,8 @@ jump={
 2d_physics/layer_6="hitbox"
 2d_render/layer_7="map_traps"
 2d_physics/layer_7="map_traps"
+2d_render/layer_8="item"
+2d_physics/layer_8="item"
 
 [rendering]
 

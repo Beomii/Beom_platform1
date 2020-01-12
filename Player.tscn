@@ -1,44 +1,12 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Player.gd" type="Script" id=1]
-[ext_resource path="res://sprites/Player/adventurer-idle-00.png" type="Texture" id=2]
-[ext_resource path="res://sprites/Player/adventurer-idle-01.png" type="Texture" id=3]
-[ext_resource path="res://sprites/Player/adventurer-idle-02.png" type="Texture" id=4]
-[ext_resource path="res://sprites/Player/adventurer-idle-03.png" type="Texture" id=5]
-[ext_resource path="res://sprites/Player/adventurer-run-00.png" type="Texture" id=6]
-[ext_resource path="res://sprites/Player/adventurer-run-01.png" type="Texture" id=7]
-[ext_resource path="res://sprites/Player/adventurer-run-02.png" type="Texture" id=8]
-[ext_resource path="res://sprites/Player/adventurer-run-03.png" type="Texture" id=9]
-[ext_resource path="res://sprites/Player/adventurer-run-04.png" type="Texture" id=10]
-[ext_resource path="res://sprites/Player/adventurer-run-05.png" type="Texture" id=11]
-[ext_resource path="res://sprites/Player/adventurer-jump-00.png" type="Texture" id=12]
-[ext_resource path="res://sprites/Player/adventurer-jump-01.png" type="Texture" id=13]
-[ext_resource path="res://sprites/Player/adventurer-jump-02.png" type="Texture" id=14]
-[ext_resource path="res://sprites/Player/adventurer-jump-03.png" type="Texture" id=15]
-[ext_resource path="res://HPBar.tscn" type="PackedScene" id=16]
-[ext_resource path="res://sprites/Player/player_atlas.png" type="Texture" id=17]
-[ext_resource path="res://RotateObject.tscn" type="PackedScene" id=18]
+[ext_resource path="res://HPBar.tscn" type="PackedScene" id=2]
+[ext_resource path="res://sprites/Player/player_atlas.png" type="Texture" id=3]
+[ext_resource path="res://RotateObject.tscn" type="PackedScene" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 12.2201, 26.8909 )
-
-[sub_resource type="SpriteFrames" id=2]
-animations = [ {
-"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ) ],
-"loop": true,
-"name": "idle",
-"speed": 7.0
-}, {
-"frames": [ ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ) ],
-"loop": true,
-"name": "run",
-"speed": 7.0
-}, {
-"frames": [ ExtResource( 12 ), ExtResource( 13 ), ExtResource( 14 ), ExtResource( 15 ) ],
-"loop": true,
-"name": "jump",
-"speed": 7.0
-} ]
 
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 3.73836, 7.6008 )
@@ -125,23 +93,14 @@ script = ExtResource( 1 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
 
-[node name="body" type="AnimatedSprite" parent="."]
-visible = false
-position = Vector2( 0, -7.913 )
-scale = Vector2( 1.5, 1.5 )
-frames = SubResource( 2 )
-animation = "idle"
-frame = 1
-playing = true
-
-[node name="HPBar" parent="." instance=ExtResource( 16 )]
+[node name="HPBar" parent="." instance=ExtResource( 2 )]
 margin_top = -40.0
 margin_bottom = -35.0
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 0, -8 )
 scale = Vector2( 2, 2 )
-texture = ExtResource( 17 )
+texture = ExtResource( 3 )
 hframes = 18
 frame = 5
 
@@ -161,7 +120,8 @@ anims/player_idle = SubResource( 5 )
 anims/player_jump = SubResource( 6 )
 anims/player_run = SubResource( 7 )
 
-[node name="RotateObject" parent="." instance=ExtResource( 18 )]
+[node name="RotateObject" parent="." instance=ExtResource( 4 )]
+visible = false
 v_radius = 10
 [connection signal="body_entered" from="Sprite/hitbox" to="." method="_on_hitbox_body_entered"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

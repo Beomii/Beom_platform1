@@ -52,8 +52,8 @@ func damaging(unit, damage):
 	dmgMsg.setDamage(damage)
 	add_child(dmgMsg)
 	if hp < 0:
-		queue_free()
 		emit_signal("die", self)
+		queue_free()		
 	else:
 		updateHp()
 

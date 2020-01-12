@@ -56,7 +56,6 @@ func _ready():
 
 func set_gold(_gold):
 	gold = _gold
-	print("gold:"+str(gold))
 	emit_signal("gold_updated", self)
 
 func _physics_process(delta):
@@ -77,24 +76,15 @@ func _physics_process(delta):
 				force.x -= WALK_FORCE * WATER_SPEED_FACTOR
 			else:
 				force.x -= WALK_FORCE
-			$body.flip_h = true
 			stop =false
-			$body.animation = "run"
-			heading.x = -1
-			$AnimationPlayer.play("player_run")
-			$Sprite.scale.x = -1*abs($Sprite.scale.x)
+			
 	elif walk_right:
 		if velocity.x >= -WALK_MIN_SPEED and velocity.x < walk_max_speed:
 			if is_in_water:
 				force.x += WALK_FORCE * WATER_SPEED_FACTOR
 			else:
 				force.x += WALK_FORCE
-			$body.flip_h = false
-			stop = false
-			$body.animation = "run"
-			heading.x = 1
-			$AnimationPlayer.play("player_run")
-			$Sprite.scale.x = abs($Sprite.scale.x)
+			stop = false			
 			
 	if stop:
 		var vsign = sign(velocity.x)
@@ -104,11 +94,7 @@ func _physics_process(delta):
 		if vlen<0:
 			vlen =0
 		velocity.x = vlen*vsign
-		
-	if velocity.x == 0 and is_on_floor():
-		$body.animation = "idle"
-		if !jumping and !attack_melee:
-			$AnimationPlayer.play("player_idle")
+	
 	
 	if is_on_floor():
 		on_air_time = 0
@@ -121,13 +107,29 @@ func _physics_process(delta):
 		jumping = true
 	
 	if jumping:
-		$body.animation = "jump"
 		$AnimationPlayer.play("player_jump")
 		
 	on_air_time += delta	
 	prev_jump_pressed = jump
 	
 	velocity += force*delta
+	
+
+	if velocity.x<0:
+		heading.x = -1
+		if is_on_floor():
+			$AnimationPlayer.play("player_run")
+		$Sprite.scale.x = -1*abs($Sprite.scale.x)
+	elif velocity.x>0:
+		heading.x = 1
+		if is_on_floor():
+			$AnimationPlayer.play("player_run")
+		$Sprite.scale.x = abs($Sprite.scale.x)
+	else:	
+		if is_on_floor():
+			if !jumping and !attack_melee:
+				$AnimationPlayer.play("player_idle")
+	
 	velocity = move_and_slide(velocity, Vector2(0, -1))
 	
 	attack_timer += delta
@@ -213,10 +215,9 @@ func damaging(unit, damage):
 
 
 func _on_AnimationPlayer_animation_finished(anim_name):
-	pass
-	#if anim_name == "player_attack":
-	#	attack_melee = false
-	#	$AnimationPlayer.play("player_idle")
+	if anim_name == "player_attack":
+		attack_melee = false
+		$AnimationPlayer.play("player_idle")
 
 
 func _on_hitbox_body_entered(body):

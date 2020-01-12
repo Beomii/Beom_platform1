@@ -1,5 +1,6 @@
 extends KinematicBody2D
 
+var Coin = preload("res://items/Coin.tscn")
 const STATE_IDLE = 0
 const STATE_WALK = 1
 const STATE_ATTACK = 2
@@ -44,9 +45,13 @@ func damaging(unit, damage):
 	dmgMsg.setDamage(damage)
 	add_child(dmgMsg)
 	if hp < 0:
+		var coin = Coin.instance()
+		coin.position = position
+		coin.gold = gold
+		get_parent().add_child(coin)
 		queue_free()
 		emit_signal("enemy_die")
-		if unit.collision_layer == 1:
+		if unit.collision_layer == global.COLLISION_LAYER_PLAYER:
 			unit.gold = unit.gold + gold
 	else:
 		updateHp()
