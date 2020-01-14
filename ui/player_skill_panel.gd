@@ -11,11 +11,11 @@ func _process(delta):
 	if player:
 		var _player = player.get_ref()
 		if _player:
-			var attack_cool_percent = 100 - float(_player.attack_melee_timer)/float(_player.attack_melee_duration)*100.0
+			var attack_cool_percent = 100 - float(_player.attack_melee_cooltimer)/float(_player.attack_melee_cooltime)*100.0
 			if attack_cool_percent < 100:
 				$SkillButton1.value = attack_cool_percent
-				if _player.attack_melee_timer < _player.attack_melee_duration:
-					$SkillButton1/Label.text = str(int(_player.attack_melee_duration - _player.attack_melee_timer))
+				if _player.attack_melee_cooltimer < _player.attack_melee_cooltime:
+					$SkillButton1/Label.text = str(int(_player.attack_melee_cooltime - _player.attack_melee_cooltimer))
 			else:
 				$SkillButton1.value = 0
 				$SkillButton1/Label.text="Ready"

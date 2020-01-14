@@ -1,10 +1,11 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://enemy/Minotaur.gd" type="Script" id=1]
 [ext_resource path="res://sprites/enemy/minotaur/minotaur_sheet.png" type="Texture" id=2]
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 11.6706, 20.0583 )
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 13.4916
+height = 13.2823
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 9.28732, 30.7831 )
@@ -128,12 +129,15 @@ bg_color = Color( 0.980392, 0.0823529, 0.0823529, 1 )
 
 [sub_resource type="CircleShape2D" id=10]
 
+[sub_resource type="RectangleShape2D" id=11]
+extents = Vector2( 15.1291, 16.0842 )
+
 [node name="Minotaur" type="KinematicBody2D"]
 collision_layer = 8
+collision_mask = 0
 script = ExtResource( 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 position = Vector2( -1.98608, -3.17773 )
 shape = SubResource( 1 )
 
@@ -197,9 +201,16 @@ margin_right = 50.0
 margin_bottom = -36.0
 align = 1
 valign = 1
+
+[node name="rush_hitbox" type="Area2D" parent="."]
+collision_layer = 32
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="rush_hitbox"]
+shape = SubResource( 11 )
 [connection signal="die" from="." to="." method="_on_Minotaur_die"]
 [connection signal="body_entered" from="Sprite/hitbox" to="." method="_on_hitbox_body_entered"]
 [connection signal="body_entered" from="Sprite/attack2_hitbox" to="." method="_on_attack2_hitbox_body_entered"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="body_entered" from="detector" to="." method="_on_detector_body_entered"]
 [connection signal="body_exited" from="detector" to="." method="_on_detector_body_exited"]
+[connection signal="body_entered" from="rush_hitbox" to="." method="_on_rush_hitbox_body_entered"]

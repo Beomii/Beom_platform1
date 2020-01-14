@@ -13,7 +13,7 @@ const STOP_FORCE = 1000
 const JUMP_MAX_AIRBORNE_TIME = 0.2
 const WATER_SPEED_FACTOR = 0.2
 
-const JUMP_SPEED = 700
+const JUMP_SPEED = 560
 var on_air_time = 100
 var velocity = Vector2()
 var jumping = false
@@ -33,7 +33,9 @@ var attack_timer = 0
 var heading = Vector2(1,0)
 
 var attack_melee = false
-var attack_melee_duration = 2
+var attack_melee_cooltime = 1
+var attack_melee_cooltimer = attack_melee_cooltime
+var attack_melee_duration = 0.5
 var attack_melee_timer = 0
 
 var is_in_water = false
@@ -45,14 +47,9 @@ var breath = MAX_BREATH
 var breath_timer_delay = 1
 var breath_timer = 0
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	emit_signal("hp_updated", self)
 	emit_signal("gold_updated", self)
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
 
 func set_gold(_gold):
 	gold = _gold
@@ -70,21 +67,22 @@ func _physics_process(delta):
 		walk_max_speed = WALK_MAX_SPEED*WATER_SPEED_FACTOR
 	
 	var stop = true
-	if walk_left:
-		if velocity.x <= WALK_MIN_SPEED and velocity.x > -walk_max_speed:
-			if is_in_water:
-				force.x -= WALK_FORCE * WATER_SPEED_FACTOR
-			else:
-				force.x -= WALK_FORCE
-			stop =false
-			
-	elif walk_right:
-		if velocity.x >= -WALK_MIN_SPEED and velocity.x < walk_max_speed:
-			if is_in_water:
-				force.x += WALK_FORCE * WATER_SPEED_FACTOR
-			else:
-				force.x += WALK_FORCE
-			stop = false			
+	if !attack_melee:
+		if walk_left:
+			if velocity.x <= WALK_MIN_SPEED and velocity.x > -walk_max_speed:
+				if is_in_water:
+					force.x -= WALK_FORCE * WATER_SPEED_FACTOR
+				else:
+					force.x -= WALK_FORCE
+				stop =false
+				
+		elif walk_right:
+			if velocity.x >= -WALK_MIN_SPEED and velocity.x < walk_max_speed:
+				if is_in_water:
+					force.x += WALK_FORCE * WATER_SPEED_FACTOR
+				else:
+					force.x += WALK_FORCE
+				stop = false			
 			
 	if stop:
 		var vsign = sign(velocity.x)
@@ -114,27 +112,28 @@ func _physics_process(delta):
 	
 	velocity += force*delta
 	
-
-	if velocity.x<0:
-		heading.x = -1
-		if is_on_floor():
-			$AnimationPlayer.play("player_run")
-		$Sprite.scale.x = -1*abs($Sprite.scale.x)
-	elif velocity.x>0:
-		heading.x = 1
-		if is_on_floor():
-			$AnimationPlayer.play("player_run")
-		$Sprite.scale.x = abs($Sprite.scale.x)
-	else:	
-		if is_on_floor():
-			if !jumping and !attack_melee:
-				$AnimationPlayer.play("player_idle")
+	if !attack_melee:
+		if velocity.x<0:
+			heading.x = -1
+			if is_on_floor():
+				$AnimationPlayer.play("player_run")
+			$Sprite.scale.x = -1*abs($Sprite.scale.x)
+		elif velocity.x>0:
+			heading.x = 1
+			if is_on_floor():
+				$AnimationPlayer.play("player_run")
+			$Sprite.scale.x = abs($Sprite.scale.x)
+		else:	
+			if is_on_floor():
+				if !jumping and !attack_melee:
+					$AnimationPlayer.play("player_idle")
 	
 	velocity = move_and_slide(velocity, Vector2(0, -1))
 	
 	attack_timer += delta
 	if attack_melee:
 		attack_melee_timer+=delta
+	attack_melee_cooltimer += delta
 		
 	if attack_melee_timer >= attack_melee_duration:
 		attack_melee = false
@@ -171,9 +170,15 @@ func _input(event):
 				else:
 					print("attack cooltime!")
 			elif event.scancode == KEY_K:
-				if !attack_melee:
-					$AnimationPlayer.play("player_attack")
-					attack_melee = true
+				if attack_melee_cooltimer >= attack_melee_cooltime:
+					if !attack_melee:
+						$AnimationPlayer.play("player_attack")
+						attack_melee = true
+						attack_melee_cooltimer= 0
+						attack_melee_timer = 0	
+				else:
+					print(attack_melee_cooltimer)
+					
 				
 func attack():
 	var magic = Magic.instance()
@@ -215,9 +220,10 @@ func damaging(unit, damage):
 
 
 func _on_AnimationPlayer_animation_finished(anim_name):
-	if anim_name == "player_attack":
-		attack_melee = false
-		$AnimationPlayer.play("player_idle")
+	pass
+	#if anim_name == "player_attack":
+	#	attack_melee = false
+	#	$AnimationPlayer.play("player_idle")
 
 
 func _on_hitbox_body_entered(body):
