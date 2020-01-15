@@ -26,10 +26,12 @@ export var gold = 0	setget set_gold
 export var damage = 30
 
 var DamageMessage = preload("res://ui/DamageMessage.tscn")
+var HealMessage = preload("res://ui/HealMessage.tscn")
+var HealEffect = preload("res://effects/HealEffect.tscn")
 var Magic  = preload("res://projectile/Magic.tscn")
 
 var attack_delay = 3
-var attack_timer = 0
+var attack_timer = attack_delay
 var heading = Vector2(1,0)
 
 var attack_melee = false
@@ -204,6 +206,20 @@ func updateHp():
 	var percent = int(float(hp) / float(max_hp) * 100.0)
 	$HPBar/Tween.interpolate_property($HPBar, "value", $HPBar.value, percent, 0.2, Tween.TRANS_QUAD, Tween.EASE_IN)
 	$HPBar/Tween.start()
+	
+func healing(heal_point):
+	hp += heal_point
+	if hp > max_hp:
+		hp = max_hp
+	var healEffect = HealEffect.instance()
+	healEffect.position= Vector2(0, 25)
+	add_child(healEffect)
+	var healMsg = HealMessage.instance()
+	healMsg.rect_position = Vector2(0, -30)
+	healMsg.setHealPoint(heal_point)
+	add_child(healMsg)
+	updateHp()
+	emit_signal("hp_updated", self)
 	
 func damaging(unit, damage):
 	hp -= damage

@@ -30,7 +30,7 @@ var rush_cooltime = 5
 var rush_timer = rush_cooltime
 var rush_pos = Vector2()
 export var rush_distance = 200
-export var rush_speed = 300
+export var rush_speed = 600
 export var rush_damage = 20
 
 
@@ -117,7 +117,7 @@ func _process_force(force, delta):
 						$Sprite.scale.x = -1*abs($Sprite.scale.x)
 						stop = false
 						$AnimationPlayer.play("run")
-				if $Sprite/RayCast2D.is_colliding():				
+				if $Sprite/RayCast2D.is_colliding():
 					if is_on_floor():
 						velocity.y = -500
 			updateLabel("move to target")		
@@ -139,6 +139,11 @@ func _process_force(force, delta):
 					move_and_slide(Vector2(dir.x*rush_speed, 0), Vector2(0, -1))
 					updateLabel("Rush")
 					$AnimationPlayer.play("run")
+				
+				if $Sprite/RayCast2D.is_colliding():
+					if is_on_floor():
+						velocity.y = -500
+						state= STATE_MOVE_TO_TARGET
 	attack1_timer += delta
 	attack2_timer += delta
 	rush_timer+= delta

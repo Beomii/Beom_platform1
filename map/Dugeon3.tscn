@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://map/Dugeon3.gd" type="Script" id=1]
 [ext_resource path="res://sprites/tiles/dungeon_tile.png" type="Texture" id=2]
@@ -7,7 +7,8 @@
 [ext_resource path="res://enemy/Minotaur.tscn" type="PackedScene" id=5]
 [ext_resource path="res://ui/HUD.tscn" type="PackedScene" id=6]
 [ext_resource path="res://map/traps/thorns.tscn" type="PackedScene" id=7]
-[ext_resource path="res://items/Coin.tscn" type="PackedScene" id=8]
+[ext_resource path="res://items/HealPack.tscn" type="PackedScene" id=8]
+[ext_resource path="res://items/Coin.tscn" type="PackedScene" id=9]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 0, 0, 16, 0, 16, 16, 0, 16 )
@@ -233,7 +234,12 @@ position = Vector2( 801.314, 531.37 )
 [node name="thorns" parent="map_objects" instance=ExtResource( 7 )]
 position = Vector2( 178.629, 535.887 )
 
-[node name="Coin" parent="." instance=ExtResource( 8 )]
+[node name="HealPack" parent="map_objects" instance=ExtResource( 8 )]
+position = Vector2( 413.372, 451.35 )
+scale = Vector2( 0.5, 0.5 )
+heal_point = 20
+
+[node name="Coin" parent="." instance=ExtResource( 9 )]
 position = Vector2( 226.228, 530.741 )
 [connection signal="gold_updated" from="Player" to="." method="_on_Player_gold_updated"]
 [connection signal="hp_updated" from="Player" to="." method="_on_Player_hp_updated"]
