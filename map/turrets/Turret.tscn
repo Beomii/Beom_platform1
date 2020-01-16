@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://map/turrets/Turret.gd" type="Script" id=1]
+[ext_resource path="res://sprites/turret/turret002.png" type="Texture" id=2]
+[ext_resource path="res://sprites/turret/turret002-1.png" type="Texture" id=3]
+
+[sub_resource type="CircleShape2D" id=1]
+
+[node name="Turret" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="turret_head" type="Sprite" parent="."]
+scale = Vector2( -1, 1 )
+texture = ExtResource( 2 )
+offset = Vector2( -16.7249, -1.25436 )
+
+[node name="fire_position" type="Position2D" parent="turret_head"]
+position = Vector2( -74.3799, -6.49612 )
+
+[node name="turret_body" type="Sprite" parent="."]
+position = Vector2( -15.0524, -5.01746 )
+texture = ExtResource( 3 )
+
+[node name="detector" type="Area2D" parent="."]
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="detector"]
+shape = SubResource( 1 )
+
+[node name="Label" type="Label" parent="."]
+visible = false
+margin_left = -20.0
+margin_top = -40.0
+margin_right = 20.0
+margin_bottom = -26.0
+[connection signal="body_entered" from="detector" to="." method="_on_detector_body_entered"]
+[connection signal="body_exited" from="detector" to="." method="_on_detector_body_exited"]

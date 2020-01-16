@@ -215,3 +215,10 @@ func _on_rush_hitbox_body_entered(body):
 				body.velocity.x += -1*sign((position - body.position).x)* 200
 				state = STATE_IDLE
 				print("rush hitbox hit")
+
+func damaging(unit, damage):
+	.damaging(unit, damage)
+	
+	$Sprite.modulate = Color(1.0, 0.0, 0.0, 1.0)
+	$DamageTween.interpolate_property($Sprite, "modulate", $Sprite.modulate, Color(1.0, 1.0, 1.0, 1.0), 0.5, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	$DamageTween.start()

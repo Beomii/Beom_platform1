@@ -226,6 +226,11 @@ func damaging(unit, damage):
 	var dmgMsg = DamageMessage.instance()
 	dmgMsg.setDamage(damage)
 	add_child(dmgMsg)
+	
+	$Sprite.modulate = Color(1.0, 0.0, 0.0, 1.0)
+	$DamageTween.interpolate_property($Sprite, "modulate", $Sprite.modulate, Color(1.0, 1.0, 1.0, 1.0), 0.5, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	$DamageTween.start()
+	
 	if hp <= 0:
 		queue_free()
 		emit_signal("player_die")

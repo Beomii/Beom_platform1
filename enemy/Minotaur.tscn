@@ -207,6 +207,8 @@ collision_layer = 32
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="rush_hitbox"]
 shape = SubResource( 11 )
+
+[node name="DamageTween" type="Tween" parent="."]
 [connection signal="die" from="." to="." method="_on_Minotaur_die"]
 [connection signal="body_entered" from="Sprite/hitbox" to="." method="_on_hitbox_body_entered"]
 [connection signal="body_entered" from="Sprite/attack2_hitbox" to="." method="_on_attack2_hitbox_body_entered"]

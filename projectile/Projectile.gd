@@ -4,7 +4,7 @@ signal out_of_range
 
 var shooter = null
 var damage = 20
-var speed= 200
+export var speed= 200
 var velocity = Vector2()
 var direction = Vector2()
 
