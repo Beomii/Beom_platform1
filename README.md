@@ -6,3 +6,5 @@
 스트리밍 채널에 들러주세요.
 
 https://www.twitch.tv/yhb37
+
+https://www.youtube.com/channel/UCPXSGRslbc-3e2nPk70vMjQ
