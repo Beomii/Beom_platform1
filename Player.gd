@@ -40,6 +40,22 @@ var attack_melee_cooltimer = attack_melee_cooltime
 var attack_melee_duration = 0.5
 var attack_melee_timer = 0
 
+var attack2 = false
+var attack2_cooltime = 1
+var attack2_cooltimer = attack2_cooltime
+var attack2_duration = 0.7
+var attack2_timer = 0
+
+var attack3 = false
+var attack3_cooltime = 1
+var attack3_cooltimer = attack3_cooltime
+var attack3_duration = 1
+var attack3_timer = 0
+
+var sliding = false
+var sliding_cooltime = 0.5
+var sliding_cooltimer = sliding_cooltime
+
 var is_in_water = false
 const MAX_BREATH = 100
 const BREATH_REDUCE_AMOUNT = 10
@@ -114,7 +130,7 @@ func _physics_process(delta):
 	
 	velocity += force*delta
 	
-	if !attack_melee:
+	if !attack_melee and !attack2 and !attack3 and !sliding:
 		if velocity.x<0:
 			heading.x = -1
 			if is_on_floor():
@@ -136,11 +152,31 @@ func _physics_process(delta):
 	if attack_melee:
 		attack_melee_timer+=delta
 	attack_melee_cooltimer += delta
+	
+	attack2_cooltimer += delta
+	if attack2:
+		attack2_timer += delta
+		
+	attack3_cooltimer += delta
+	if attack3:
+		attack3_timer += delta
+	
+	sliding_cooltimer += delta
 		
 	if attack_melee_timer >= attack_melee_duration:
 		attack_melee = false
 		$AnimationPlayer.play("player_idle")
 		attack_melee_timer=0
+		
+	if attack2_timer >= attack2_duration:
+		attack2=false
+		$AnimationPlayer.play("player_idle")
+		attack2_timer = 0
+		
+	if attack3_timer >= attack3_duration:
+		attack3 = false
+		$AnimationPlayer.play("player_idle")
+		attack3_timer = 0
 	
 	breath_timer += delta
 		
@@ -171,7 +207,7 @@ func _input(event):
 					attack_timer = 0
 				else:
 					print("attack cooltime!")
-			elif event.scancode == KEY_K:
+			elif event.scancode == KEY_J:
 				if attack_melee_cooltimer >= attack_melee_cooltime:
 					if !attack_melee:
 						$AnimationPlayer.play("player_attack")
@@ -180,6 +216,27 @@ func _input(event):
 						attack_melee_timer = 0	
 				else:
 					print(attack_melee_cooltimer)
+			elif event.scancode == KEY_K:
+				if attack2_cooltimer >= attack2_cooltime:
+					if !attack2:
+						$AnimationPlayer.play("player_attack2")
+						attack2=true
+						attack2_cooltimer =0
+						attack2_timer=0
+			elif event.scancode == KEY_L:
+				if attack3_cooltimer >= attack3_cooltime:
+					if !attack3:
+						$AnimationPlayer.play("player_attack3")
+						velocity = move_and_slide(Vector2(sign($Sprite.scale.x)*300, 0), Vector2(0, -1))
+						attack3=true
+						attack3_cooltimer=0
+						attack3_timer = 0
+			elif event.scancode == KEY_U:
+				if sliding_cooltimer >= sliding_cooltime:
+					$AnimationPlayer.play("player_sliding")
+					velocity = move_and_slide(Vector2(sign($Sprite.scale.x)*500, 0), Vector2(0, -1))
+					sliding_cooltimer=0
+					sliding=true
 					
 				
 func attack():
@@ -222,6 +279,10 @@ func healing(heal_point):
 	emit_signal("hp_updated", self)
 	
 func damaging(unit, damage):
+	if sliding:
+		#슬라이딩 중에는 데미지 안받음.
+		return
+		
 	hp -= damage
 	var dmgMsg = DamageMessage.instance()
 	dmgMsg.setDamage(damage)
@@ -241,12 +302,36 @@ func damaging(unit, damage):
 
 
 func _on_AnimationPlayer_animation_finished(anim_name):
-	pass
-	#if anim_name == "player_attack":
-	#	attack_melee = false
-	#	$AnimationPlayer.play("player_idle")
+	if anim_name == "player_sliding":
+		sliding=false
+		$AnimationPlayer.play("player_idle")
 
 
 func _on_hitbox_body_entered(body):
+	if body.has_method("damaging"):
+		body.damaging(self, damage)
+
+
+func _on_hitbox_area_entered(area):
+	if area.has_method("damaging"):
+		area.damaging(self, damage)
+
+
+func _on_attack2_hitbox_body_entered(body):
+	if body.has_method("damaging"):
+		body.damaging(self, damage)
+
+
+func _on_attack2_hitbox_area_entered(area):
+	if area.has_method("damaging"):
+		area.damaging(self, damage)
+
+
+func _on_attack3_hitbox_area_entered(area):
+	if area.has_method("damaging"):
+		area.damaging(self, damage)
+
+
+func _on_attack3_hitbox_body_entered(body):
 	if body.has_method("damaging"):
 		body.damaging(self, damage)

@@ -11,7 +11,6 @@ scale = Vector2( 0.5, 0.5 )
 collision_layer = 16
 collision_mask = 3
 script = ExtResource( 1 )
-speed = 500
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 2 )

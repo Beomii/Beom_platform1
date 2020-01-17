@@ -76,6 +76,7 @@ bg_color = Color( 0.34902, 0.921569, 0.207843, 1 )
 bg_color = Color( 0.992157, 0.0509804, 0.0509804, 1 )
 
 [sub_resource type="CircleShape2D" id=7]
+resource_local_to_scene = true
 radius = 112.021
 
 [node name="Skeleton" type="KinematicBody2D"]

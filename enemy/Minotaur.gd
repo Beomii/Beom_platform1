@@ -33,6 +33,8 @@ export var rush_distance = 200
 export var rush_speed = 600
 export var rush_damage = 20
 
+export var attack2_knockback = false
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -142,8 +144,9 @@ func _process_force(force, delta):
 				
 				if $Sprite/RayCast2D.is_colliding():
 					if is_on_floor():
-						velocity.y = -500
-						state= STATE_MOVE_TO_TARGET
+						if state != STATE_ATTACK1 and state != STATE_ATTACK2:
+							velocity.y = -500
+							state= STATE_MOVE_TO_TARGET
 	attack1_timer += delta
 	attack2_timer += delta
 	rush_timer+= delta
@@ -170,7 +173,8 @@ func _on_attack2_hitbox_body_entered(body):
 			body.damaging(self, damage)
 			
 			#knockback
-			body.velocity.x += -1*sign((position - body.position).x)* 300
+			if attack2_knockback:
+				body.velocity.x += -1*sign((position - body.position).x)* 300
 
 
 func _on_detector_body_entered(body):

@@ -1,16 +1,22 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Player.gd" type="Script" id=1]
 [ext_resource path="res://HPBar.tscn" type="PackedScene" id=2]
-[ext_resource path="res://sprites/Player/player_atlas.png" type="Texture" id=3]
+[ext_resource path="res://sprites/Player/player_full.png" type="Texture" id=3]
 [ext_resource path="res://RotateObject.tscn" type="PackedScene" id=4]
 
 [sub_resource type="CapsuleShape2D" id=1]
-radius = 13.0107
-height = 22.4901
+radius = 10.83
+height = 15.654
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 3.73836, 7.6008 )
+
+[sub_resource type="RectangleShape2D" id=9]
+extents = Vector2( 4.79886, 10 )
+
+[sub_resource type="RectangleShape2D" id=10]
+extents = Vector2( 6.63472, 6.45846 )
 
 [sub_resource type="Animation" id=3]
 resource_name = "player_attack"
@@ -52,6 +58,85 @@ tracks/2/keys = {
 "values": [ false, true, false ]
 }
 
+[sub_resource type="Animation" id=7]
+resource_name = "player_attack2"
+length = 0.7
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.7 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 5, 10 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite/attack2_hitbox:monitoring")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ false, true, false ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprite/attack2_hitbox/CollisionShape2D:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.5, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true ]
+}
+
+[sub_resource type="Animation" id=8]
+resource_name = "player_attack3"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 11, 16 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite/attack3_hitbox:monitoring")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ false, true, false ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprite/attack3_hitbox/CollisionShape2D:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.5, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true ]
+}
+
 [sub_resource type="Animation" id=4]
 loop = true
 tracks/0/type = "value"
@@ -64,7 +149,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ 5, 7 ]
+"values": [ 45, 47 ]
 }
 
 [sub_resource type="Animation" id=5]
@@ -79,7 +164,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ 8, 11 ]
+"values": [ 50, 53 ]
 }
 
 [sub_resource type="Animation" id=6]
@@ -95,7 +180,23 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.8 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ 12, 17 ]
+"values": [ 54, 59 ]
+}
+
+[sub_resource type="Animation" id=11]
+resource_name = "player_sliding"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 60, 61 ]
 }
 
 [node name="Player" type="KinematicBody2D"]
@@ -112,11 +213,14 @@ margin_bottom = -35.0
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 0, -8 )
-scale = Vector2( 2, 2 )
+scale = Vector2( 1.5, 1.5 )
 texture = ExtResource( 3 )
-hframes = 18
+vframes = 3
+hframes = 23
+frame = 60
 
 [node name="hitbox" type="Area2D" parent="Sprite"]
+visible = false
 position = Vector2( 1.71288, 0.79056 )
 monitoring = false
 collision_layer = 32
@@ -127,16 +231,43 @@ position = Vector2( 18.5782, -3.82104 )
 shape = SubResource( 2 )
 disabled = true
 
+[node name="attack2_hitbox" type="Area2D" parent="Sprite"]
+visible = false
+collision_layer = 32
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/attack2_hitbox"]
+position = Vector2( 17.5241, 3.17103 )
+shape = SubResource( 9 )
+
+[node name="attack3_hitbox" type="Area2D" parent="Sprite"]
+monitoring = false
+collision_layer = 32
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/attack3_hitbox"]
+position = Vector2( 19.36, 6.34205 )
+shape = SubResource( 10 )
+disabled = true
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/player_attack = SubResource( 3 )
+anims/player_attack2 = SubResource( 7 )
+anims/player_attack3 = SubResource( 8 )
 anims/player_idle = SubResource( 4 )
 anims/player_jump = SubResource( 5 )
 anims/player_run = SubResource( 6 )
+anims/player_sliding = SubResource( 11 )
 
 [node name="RotateObject" parent="." instance=ExtResource( 4 )]
 visible = false
 v_radius = 10
 
 [node name="DamageTween" type="Tween" parent="."]
+[connection signal="area_entered" from="Sprite/hitbox" to="." method="_on_hitbox_area_entered"]
 [connection signal="body_entered" from="Sprite/hitbox" to="." method="_on_hitbox_body_entered"]
+[connection signal="area_entered" from="Sprite/attack2_hitbox" to="." method="_on_attack2_hitbox_area_entered"]
+[connection signal="body_entered" from="Sprite/attack2_hitbox" to="." method="_on_attack2_hitbox_body_entered"]
+[connection signal="area_entered" from="Sprite/attack3_hitbox" to="." method="_on_attack3_hitbox_area_entered"]
+[connection signal="body_entered" from="Sprite/attack3_hitbox" to="." method="_on_attack3_hitbox_body_entered"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
