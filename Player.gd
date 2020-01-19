@@ -35,26 +35,28 @@ var attack_timer = attack_delay
 var heading = Vector2(1,0)
 
 var attack_melee = false
-var attack_melee_cooltime = 1
+var attack_melee_cooltime = 0.6
 var attack_melee_cooltimer = attack_melee_cooltime
-var attack_melee_duration = 0.5
+var attack_melee_duration = 0.4
 var attack_melee_timer = 0
 
 var attack2 = false
 var attack2_cooltime = 1
 var attack2_cooltimer = attack2_cooltime
-var attack2_duration = 0.7
+var attack2_duration = 0.6
 var attack2_timer = 0
 
 var attack3 = false
 var attack3_cooltime = 1
 var attack3_cooltimer = attack3_cooltime
-var attack3_duration = 1
+var attack3_duration = 0.6
 var attack3_timer = 0
 
 var sliding = false
-var sliding_cooltime = 0.5
+var sliding_cooltime = 1
 var sliding_cooltimer = sliding_cooltime
+var sliding_duration = 0.5
+var sliding_timer = 0
 
 var is_in_water = false
 const MAX_BREATH = 100
@@ -66,12 +68,20 @@ var breath_timer_delay = 1
 var breath_timer = 0
 
 func _ready():
-	emit_signal("hp_updated", self)
+	#emit_signal("hp_updated", self)
 	emit_signal("gold_updated", self)
+	$Sprite/hitbox.monitoring=false
+	$Sprite/attack2_hitbox.monitoring=false
+	$Sprite/attack3_hitbox.monitoring=false
 
 func set_gold(_gold):
 	gold = _gold
 	emit_signal("gold_updated", self)
+	
+func is_action():
+	if attack_melee or attack2 or attack3 or sliding:
+		return true
+	return false
 
 func _physics_process(delta):
 	var force = Vector2(0, GRAVITY)
@@ -85,7 +95,7 @@ func _physics_process(delta):
 		walk_max_speed = WALK_MAX_SPEED*WATER_SPEED_FACTOR
 	
 	var stop = true
-	if !attack_melee:
+	if !is_action():
 		if walk_left:
 			if velocity.x <= WALK_MIN_SPEED and velocity.x > -walk_max_speed:
 				if is_in_water:
@@ -130,7 +140,7 @@ func _physics_process(delta):
 	
 	velocity += force*delta
 	
-	if !attack_melee and !attack2 and !attack3 and !sliding:
+	if !is_action():
 		if velocity.x<0:
 			heading.x = -1
 			if is_on_floor():
@@ -161,6 +171,8 @@ func _physics_process(delta):
 	if attack3:
 		attack3_timer += delta
 	
+	if sliding:
+		sliding_timer += delta
 	sliding_cooltimer += delta
 		
 	if attack_melee_timer >= attack_melee_duration:
@@ -177,6 +189,11 @@ func _physics_process(delta):
 		attack3 = false
 		$AnimationPlayer.play("player_idle")
 		attack3_timer = 0
+		
+	if sliding_timer >= sliding_duration:
+		sliding = false
+		$AnimationPlayer.play("player_idle")
+		sliding_timer = 0
 	
 	breath_timer += delta
 		
@@ -208,35 +225,41 @@ func _input(event):
 				else:
 					print("attack cooltime!")
 			elif event.scancode == KEY_J:
-				if attack_melee_cooltimer >= attack_melee_cooltime:
-					if !attack_melee:
-						$AnimationPlayer.play("player_attack")
-						attack_melee = true
-						attack_melee_cooltimer= 0
-						attack_melee_timer = 0	
-				else:
-					print(attack_melee_cooltimer)
+				if !is_action():
+					if attack_melee_cooltimer >= attack_melee_cooltime:
+						if !attack_melee:
+							$AnimationPlayer.play("player_attack")
+							attack_melee = true
+							attack_melee_cooltimer= 0
+							attack_melee_timer = 0	
+							
 			elif event.scancode == KEY_K:
-				if attack2_cooltimer >= attack2_cooltime:
-					if !attack2:
-						$AnimationPlayer.play("player_attack2")
-						attack2=true
-						attack2_cooltimer =0
-						attack2_timer=0
+				if !is_action():
+					if attack2_cooltimer >= attack2_cooltime:
+						if !attack2:
+							$AnimationPlayer.play("player_attack2")
+							attack2=true
+							attack2_cooltimer =0
+							attack2_timer=0
+							
 			elif event.scancode == KEY_L:
-				if attack3_cooltimer >= attack3_cooltime:
-					if !attack3:
-						$AnimationPlayer.play("player_attack3")
-						velocity = move_and_slide(Vector2(sign($Sprite.scale.x)*300, 0), Vector2(0, -1))
-						attack3=true
-						attack3_cooltimer=0
-						attack3_timer = 0
+				if !is_action():
+					if attack3_cooltimer >= attack3_cooltime:
+						if !attack3:
+							$AnimationPlayer.play("player_attack3")
+							velocity = move_and_slide(Vector2(sign($Sprite.scale.x)*300, 0), Vector2(0, -1))
+							attack3=true
+							attack3_cooltimer=0
+							attack3_timer = 0
+							
 			elif event.scancode == KEY_U:
-				if sliding_cooltimer >= sliding_cooltime:
-					$AnimationPlayer.play("player_sliding")
-					velocity = move_and_slide(Vector2(sign($Sprite.scale.x)*500, 0), Vector2(0, -1))
-					sliding_cooltimer=0
-					sliding=true
+				if !is_action():
+					if sliding_cooltimer >= sliding_cooltime:
+						if is_on_floor():
+							$AnimationPlayer.play("player_sliding")
+							velocity = move_and_slide(Vector2(sign($Sprite.scale.x)*500, 0), Vector2(0, -1))
+							sliding_cooltimer=0
+							sliding=true
 					
 				
 func attack():
@@ -246,23 +269,33 @@ func attack():
 	magic.shoot(self, heading+position)
 	
 func save_data():
+	"""
 	var player_data = {
 		"hp":hp,
 		"max_hp":max_hp,
 		"gold":gold
 		}
 	return player_data
+	"""
+	global.player_data.hp = hp
+	global.player_data.max_hp = max_hp
+	global.player_data.gold = gold
+	return global.player_data
 	
 func load_data(data):
 	hp = data.hp
 	max_hp = data.max_hp
 	gold = data.gold
-	updateHp()
+	updateHp(false)
 	
-func updateHp():
-	var percent = int(float(hp) / float(max_hp) * 100.0)
-	$HPBar/Tween.interpolate_property($HPBar, "value", $HPBar.value, percent, 0.2, Tween.TRANS_QUAD, Tween.EASE_IN)
-	$HPBar/Tween.start()
+func updateHp(interpolate=true):
+	#var percent = int(float(hp) / float(max_hp) * 100.0)
+	$HPBar.max_value = max_hp
+	if interpolate:
+		$HPBar/Tween.interpolate_property($HPBar, "value", $HPBar.value, hp, 0.2, Tween.TRANS_QUAD, Tween.EASE_IN)
+		$HPBar/Tween.start()
+	else:
+		$HPBar.value = hp
 	
 func healing(heal_point):
 	hp += heal_point
@@ -302,36 +335,45 @@ func damaging(unit, damage):
 
 
 func _on_AnimationPlayer_animation_finished(anim_name):
+	pass
+	
+	"""
 	if anim_name == "player_sliding":
 		sliding=false
 		$AnimationPlayer.play("player_idle")
-
+	"""
 
 func _on_hitbox_body_entered(body):
-	if body.has_method("damaging"):
-		body.damaging(self, damage)
+	if body.collision_layer==global.COLLISION_LAYER_ENEMY:
+		if body.has_method("damaging"):
+			body.damaging(self, damage)
 
 
 func _on_hitbox_area_entered(area):
-	if area.has_method("damaging"):
-		area.damaging(self, damage)
+	if area.collision_layer==global.COLLISION_LAYER_ENEMY:
+		if area.has_method("damaging"):
+			area.damaging(self, damage)
 
 
 func _on_attack2_hitbox_body_entered(body):
-	if body.has_method("damaging"):
-		body.damaging(self, damage)
+	if body.collision_layer==global.COLLISION_LAYER_ENEMY:
+		if body.has_method("damaging"):
+			body.damaging(self, damage)
 
 
 func _on_attack2_hitbox_area_entered(area):
-	if area.has_method("damaging"):
-		area.damaging(self, damage)
+	if area.collision_layer==global.COLLISION_LAYER_ENEMY:
+		if area.has_method("damaging"):
+			area.damaging(self, damage)
 
 
 func _on_attack3_hitbox_area_entered(area):
-	if area.has_method("damaging"):
-		area.damaging(self, damage)
+	if area.collision_layer==global.COLLISION_LAYER_ENEMY:
+		if area.has_method("damaging"):
+			area.damaging(self, damage)
 
 
 func _on_attack3_hitbox_body_entered(body):
-	if body.has_method("damaging"):
-		body.damaging(self, damage)
+	if body.collision_layer==global.COLLISION_LAYER_ENEMY:
+		if body.has_method("damaging"):
+			body.damaging(self, damage)

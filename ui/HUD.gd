@@ -13,12 +13,13 @@ func _ready():
 #func _process(delta):
 #	pass
 
-func updatePlayerHP(hp, max_hp):
+func updatePlayerHP(hp, max_hp, interpolate = true):
 	$player_hp_bar.max_value = max_hp
-	#$player_hp_bar.value = hp
-	$Tween.interpolate_property($player_hp_bar, "value", $player_hp_bar.value, hp, 0.2, Tween.TRANS_QUAD, Tween.EASE_IN)
-	$Tween.start()
-	#$player_hp_bar.update()
+	if interpolate:
+		$Tween.interpolate_property($player_hp_bar, "value", $player_hp_bar.value, hp, 0.2, Tween.TRANS_QUAD, Tween.EASE_IN)
+		$Tween.start()
+	else:
+		$player_hp_bar.value = hp
 	$player_hp_label.text = str(hp) + "/"+ str(max_hp)
 	
 func updateGold(gold):

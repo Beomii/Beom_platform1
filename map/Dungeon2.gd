@@ -1,6 +1,7 @@
 extends Node2D
 
 var Player = preload("res://Player.tscn")
+var Transition = preload("res://transition/Transition.tscn")
 var player = null
 
 # Called when the node enters the scene tree for the first time.
@@ -8,6 +9,7 @@ func _ready():
 	if global.player_data:
 		player = Player.instance()
 		player.load_data(global.player_data)
+		$HUD.updatePlayerHP(player.hp, player.max_hp, false)
 		player.connect("player_die", self, "onPlayerDied")
 		player.connect("hp_updated", self, "_on_Player_hp_updated")
 		player.connect("gold_updated", self, "_on_Player_gold_updated")
@@ -31,3 +33,11 @@ func onPlayerDied():
 
 func _on_Player_gold_updated(unit):
 	$HUD.updateGold(unit.gold)
+
+func _on_EventArea_body_entered(body):
+	if body.collision_layer == global.COLLISION_LAYER_PLAYER:		
+		player.save_data()
+		var transition =Transition.instance()
+		add_child(transition)
+		transition.change("res://map/Dugeon3.tscn",0)
+		

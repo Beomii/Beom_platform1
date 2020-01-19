@@ -21,6 +21,9 @@ export var detect_range = 500
 export var attack_range = 50
 export var speed = 3000
 
+export var attack_cooltime = 1
+var attack_timer = attack_cooltime
+
 var target =null
 
 func _ready():
@@ -68,46 +71,59 @@ func change_state():
 			$walk.visible=true
 			$attack.visible = false
 			$AnimationPlayer.play("skeleton_walk")
-		STATE_ATTACK:
-			$idle.visible=false
-			$walk.visible=false
-			$attack.visible = true
-			$AnimationPlayer.play("skeleton_attack")
+		#STATE_ATTACK:
+		#	$idle.visible=false
+		#	$walk.visible=false
+		#	$attack.visible = true
+		#	$AnimationPlayer.play("skeleton_attack")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
 func _physics_process(delta):
 	var heading = Vector2(0, 0)
+	var t = null
 	if target:
-		var t = target.get_ref()
-		if t:
-			var dist = position.distance_to(t.position)
-			if dist < attack_range:
-				state = STATE_ATTACK
-				if t.position.x < position.x:					
-					$attack.scale.x = -1* abs($attack.scale.x)
-				else:
-					$attack.scale.x = abs($attack.scale.x)
-				change_state()
-			elif dist < detect_range:
-				state = STATE_WALK
-				if t.position.x < position.x:
-					heading.x = -1
-					$walk.scale.x = -1* abs($walk.scale.x)
-				else:
-					heading.x = 1
-					$walk.scale.x = abs($walk.scale.x)
-				change_state()
+		t = target.get_ref()
+	if t:
+		var dist = position.distance_to(t.position)
+		if dist < attack_range:
+			state = STATE_ATTACK
+			if t.position.x < position.x:					
+				$attack.scale.x = -1* abs($attack.scale.x)
 			else:
-				heading.x = 0
-				
-	match(state):
+				$attack.scale.x = abs($attack.scale.x)
+			change_state()
+		elif dist < detect_range:
+			state = STATE_WALK
+			if t.position.x < position.x:
+				heading.x = -1
+				$walk.scale.x = -1* abs($walk.scale.x)
+			else:
+				heading.x = 1
+				$walk.scale.x = abs($walk.scale.x)
+			change_state()
+		else:
+			heading.x = 0
+	
+	match(state):		
 		STATE_WALK:
-			velocity.x = heading.x * speed * delta
+			if t:
+				var dist = t.position.distance_to(position)
+				if dist > 30:
+					velocity.x = heading.x * speed * delta
+		STATE_ATTACK:
+			velocity=Vector2(0,0)
+			if attack_timer>= attack_cooltime:
+				$idle.visible=false
+				$walk.visible=false
+				$attack.visible = true
+				$AnimationPlayer.play("skeleton_attack")
+				attack_timer=0
 				
 	velocity.y += GRAVITY* delta
 	velocity = move_and_slide(velocity, Vector2(0, -1))
+	attack_timer+= delta
 
 func _on_hitbox_body_entered(body):
 	if body.collision_layer == 1:
@@ -116,7 +132,6 @@ func _on_hitbox_body_entered(body):
 
 
 func _on_detector_body_entered(body):
-	print("detected:"+str(body))
 	if body.collision_layer == 1:
 		target = weakref(body)
 

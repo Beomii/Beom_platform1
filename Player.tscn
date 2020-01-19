@@ -10,17 +10,19 @@ radius = 10.83
 height = 15.654
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 3.73836, 7.6008 )
+resource_local_to_scene = true
+extents = Vector2( 8.34481, 14.9438 )
 
-[sub_resource type="RectangleShape2D" id=9]
-extents = Vector2( 4.79886, 10 )
+[sub_resource type="RectangleShape2D" id=3]
+resource_local_to_scene = true
+extents = Vector2( 8.13679, 15.4709 )
 
-[sub_resource type="RectangleShape2D" id=10]
-extents = Vector2( 6.63472, 6.45846 )
+[sub_resource type="RectangleShape2D" id=4]
+resource_local_to_scene = true
+extents = Vector2( 25.9946, 6.45846 )
 
-[sub_resource type="Animation" id=3]
-resource_name = "player_attack"
-length = 0.5
+[sub_resource type="Animation" id=5]
+length = 0.4
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -28,7 +30,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.5 ),
+"times": PoolRealArray( 0, 0.4 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ 0, 4 ]
@@ -40,7 +42,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.3, 0.4 ),
+"times": PoolRealArray( 0, 0.2, 0.3 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
 "values": [ true, false, true ]
@@ -52,15 +54,15 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0, 0.3, 0.4 ),
+"times": PoolRealArray( 0, 0.2, 0.3 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
 "values": [ false, true, false ]
 }
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id=6]
 resource_name = "player_attack2"
-length = 0.7
+length = 0.6
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -68,7 +70,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.7 ),
+"times": PoolRealArray( 0, 0.6 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ 5, 10 ]
@@ -80,7 +82,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.5, 0.6 ),
+"times": PoolRealArray( 0, 0.4, 0.5 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
 "values": [ false, true, false ]
@@ -92,14 +94,15 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0, 0.5, 0.6 ),
+"times": PoolRealArray( 0, 0.4, 0.5 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
 "values": [ true, false, true ]
 }
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=7]
 resource_name = "player_attack3"
+length = 0.6
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -107,7 +110,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 1 ),
+"times": PoolRealArray( 0, 0.6 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ 11, 16 ]
@@ -119,7 +122,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.5, 0.6 ),
+"times": PoolRealArray( 0, 0.3, 0.4 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
 "values": [ false, true, false ]
@@ -131,13 +134,13 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0, 0.5, 0.6 ),
+"times": PoolRealArray( 0, 0.3, 0.4 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
 "values": [ true, false, true ]
 }
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=8]
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
@@ -152,8 +155,7 @@ tracks/0/keys = {
 "values": [ 45, 47 ]
 }
 
-[sub_resource type="Animation" id=5]
-resource_name = "player_jump"
+[sub_resource type="Animation" id=9]
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -167,7 +169,7 @@ tracks/0/keys = {
 "values": [ 50, 53 ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=10]
 length = 0.8
 loop = true
 tracks/0/type = "value"
@@ -217,28 +219,27 @@ scale = Vector2( 1.5, 1.5 )
 texture = ExtResource( 3 )
 vframes = 3
 hframes = 23
-frame = 60
+frame = 8
 
 [node name="hitbox" type="Area2D" parent="Sprite"]
-visible = false
 position = Vector2( 1.71288, 0.79056 )
 monitoring = false
 collision_layer = 32
 collision_mask = 9
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/hitbox"]
-position = Vector2( 18.5782, -3.82104 )
+position = Vector2( 13.7382, -2.98656 )
 shape = SubResource( 2 )
-disabled = true
 
 [node name="attack2_hitbox" type="Area2D" parent="Sprite"]
-visible = false
+monitoring = false
 collision_layer = 32
 collision_mask = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/attack2_hitbox"]
-position = Vector2( 17.5241, 3.17103 )
-shape = SubResource( 9 )
+position = Vector2( 14.6869, 2.83724 )
+shape = SubResource( 3 )
+disabled = true
 
 [node name="attack3_hitbox" type="Area2D" parent="Sprite"]
 monitoring = false
@@ -246,17 +247,16 @@ collision_layer = 32
 collision_mask = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/attack3_hitbox"]
-position = Vector2( 19.36, 6.34205 )
-shape = SubResource( 10 )
-disabled = true
+position = Vector2( 2.50349, 11.182 )
+shape = SubResource( 4 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/player_attack = SubResource( 3 )
-anims/player_attack2 = SubResource( 7 )
-anims/player_attack3 = SubResource( 8 )
-anims/player_idle = SubResource( 4 )
-anims/player_jump = SubResource( 5 )
-anims/player_run = SubResource( 6 )
+anims/player_attack = SubResource( 5 )
+anims/player_attack2 = SubResource( 6 )
+anims/player_attack3 = SubResource( 7 )
+anims/player_idle = SubResource( 8 )
+anims/player_jump = SubResource( 9 )
+anims/player_run = SubResource( 10 )
 anims/player_sliding = SubResource( 11 )
 
 [node name="RotateObject" parent="." instance=ExtResource( 4 )]

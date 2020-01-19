@@ -9,10 +9,10 @@ const STATE_RUSHING = 4
 var Coin = preload("res://items/Coin.tscn")
 
 export var detect_range = 350
-export var attack1_range = 50
-export var attack2_range = 50
-export var attack1_cooltime = 5
-export var attack2_cooltime = 3
+export var attack1_range = 40
+export var attack2_range = 40
+export var attack1_cooltime = 3
+export var attack2_cooltime = 5
 export var gold = 10
 
 export var damage = 3
@@ -26,7 +26,7 @@ var target = null
 
 #돌진 스킬
 #목표 지점에 도달하거나 타겟에 부딧히면 종료
-var rush_cooltime = 5
+var rush_cooltime = 10
 var rush_timer = rush_cooltime
 var rush_pos = Vector2()
 export var rush_distance = 200
@@ -34,6 +34,7 @@ export var rush_speed = 600
 export var rush_damage = 20
 
 export var attack2_knockback = false
+export var rush_knockback=true
 
 
 # Called when the node enters the scene tree for the first time.
@@ -41,7 +42,7 @@ func _ready():
 	attack1_timer = attack1_cooltime
 	attack2_timer = attack2_cooltime
 	
-	speed = 100
+	speed = 80
 	
 	$detector/CollisionShape2D.shape.radius = detect_range
 	$hp_bar.value=hp
@@ -84,10 +85,9 @@ func _process_force(force, delta):
 									$AnimationPlayer.play("attack_2")
 									
 									attack2_timer = 0
-				if state != STATE_ATTACK1 and state != STATE_ATTACK2:
-					if dist > attack1_range and dist >attack2_range and dist < detect_range:
-						if state != STATE_RUSHING:
-							state = STATE_MOVE_TO_TARGET
+				if state != STATE_ATTACK1 and state != STATE_ATTACK2 and state != STATE_RUSHING:
+					if dist > attack1_range and dist >attack2_range and dist < detect_range:					
+						state = STATE_MOVE_TO_TARGET
 						
 					if dist > detect_range:
 						state = STATE_IDLE
@@ -122,7 +122,13 @@ func _process_force(force, delta):
 				if $Sprite/RayCast2D.is_colliding():
 					if is_on_floor():
 						velocity.y = -500
-			updateLabel("move to target")		
+			updateLabel("move to target")
+			
+			if $Sprite/RayCast2D.is_colliding():
+				if is_on_floor():
+					if state != STATE_ATTACK1 and state != STATE_ATTACK2:
+						velocity.y = -500
+						state= STATE_MOVE_TO_TARGET		
 		STATE_ATTACK1:
 			updateLabel("attack1")		
 		STATE_ATTACK2:
@@ -142,11 +148,7 @@ func _process_force(force, delta):
 					updateLabel("Rush")
 					$AnimationPlayer.play("run")
 				
-				if $Sprite/RayCast2D.is_colliding():
-					if is_on_floor():
-						if state != STATE_ATTACK1 and state != STATE_ATTACK2:
-							velocity.y = -500
-							state= STATE_MOVE_TO_TARGET
+	
 	attack1_timer += delta
 	attack2_timer += delta
 	rush_timer+= delta
@@ -175,6 +177,8 @@ func _on_attack2_hitbox_body_entered(body):
 			#knockback
 			if attack2_knockback:
 				body.velocity.x += -1*sign((position - body.position).x)* 300
+				#body.velocity = body.move_and_slide(body.velocity, Vector2(0, -1))
+				#body.valocity=Vector2(0,0)
 
 
 func _on_detector_body_entered(body):
@@ -196,11 +200,9 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 	if anim_name == "attack_1":
 		$Sprite/hitbox.monitoring=false
 		state = STATE_IDLE
-		print("attack1 finished")
 	if anim_name == "attack_2":
 		$Sprite/attack2_hitbox.monitoring=false
 		state = STATE_IDLE
-		print("attack2 finished")
 
 
 func _on_Minotaur_die(unit):
@@ -216,9 +218,11 @@ func _on_rush_hitbox_body_entered(body):
 			if body.has_method("damaging"):
 				body.damaging(self, rush_damage)
 				#knockback
-				body.velocity.x += -1*sign((position - body.position).x)* 200
-				state = STATE_IDLE
-				print("rush hitbox hit")
+				if rush_knockback:
+					body.velocity.x += -1*sign((position - body.position).x)* 300
+					#body.velocity = body.move_and_slide(body.velocity, Vector2(0, -1))
+					#body.velocity=Vector2(0,0)
+					state = STATE_IDLE
 
 func damaging(unit, damage):
 	.damaging(unit, damage)
