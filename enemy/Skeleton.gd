@@ -54,8 +54,9 @@ func damaging(unit, damage):
 		get_parent().add_child(coin)
 		queue_free()
 		emit_signal("enemy_die")
-		if unit.collision_layer == global.COLLISION_LAYER_PLAYER:
-			unit.gold = unit.gold + gold
+		if unit:
+			if unit.collision_layer == global.COLLISION_LAYER_PLAYER:
+				unit.gold = unit.gold + gold
 	else:
 		updateHp()
 	

@@ -207,7 +207,7 @@ detect_range = 300
 speed = 7000
 
 [node name="Skeleton2" parent="enemy" instance=ExtResource( 3 )]
-position = Vector2( 938.057, 313.957 )
+position = Vector2( 720.745, 522.674 )
 damage = 5
 detect_range = 300
 speed = 7000
@@ -217,10 +217,10 @@ position = Vector2( 1449.98, 335.74 )
 detect_range = 150
 
 [node name="Minotaur2" parent="enemy" instance=ExtResource( 4 )]
-position = Vector2( 913.531, 526.318 )
+position = Vector2( 1044.9, 528.774 )
 
 [node name="Wizard" parent="enemy" instance=ExtResource( 5 )]
-position = Vector2( 487.873, 523.172 )
+position = Vector2( 1651.78, 525.628 )
 damage = 10
 
 [node name="HUD" parent="." instance=ExtResource( 6 )]
@@ -236,7 +236,7 @@ scale = Vector2( 0.5, 0.5 )
 heal_point = 20
 
 [node name="Turret" parent="map_objects" instance=ExtResource( 9 )]
-position = Vector2( 1134.9, 511.307 )
+position = Vector2( 1015.81, 156.487 )
 scale = Vector2( 0.6, 0.6 )
 detect_range = 400
 damage = 1

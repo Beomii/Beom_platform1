@@ -29,6 +29,7 @@ var DamageMessage = preload("res://ui/DamageMessage.tscn")
 var HealMessage = preload("res://ui/HealMessage.tscn")
 var HealEffect = preload("res://effects/HealEffect.tscn")
 var Magic  = preload("res://projectile/Magic.tscn")
+var SwordEffect = preload("res://effects/SwordEffect2.tscn")
 
 var attack_delay = 3
 var attack_timer = attack_delay
@@ -183,6 +184,10 @@ func _physics_process(delta):
 	if attack2_timer >= attack2_duration:
 		attack2=false
 		$AnimationPlayer.play("player_idle")
+		var se = SwordEffect.instance()
+		se.position= position+Vector2(0, -10) + heading*20
+		se.set_direction(heading)
+		get_parent().add_child(se)
 		attack2_timer = 0
 		
 	if attack3_timer >= attack3_duration:
